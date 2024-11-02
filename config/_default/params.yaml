@@ -9,6 +9,7 @@ appearance:
   color: indigo
 
 # SEO
+# TODO
 marketing:
   seo:
     site_type: Person
@@ -29,25 +30,12 @@ marketing:
 # Site header
 header:
   navbar:
-    enable: true
-    blox: "navbar"
-    align: "center"
-    fixed_to_top: true
-    logo:
-      text: ""
-      # Logo filename in `assets/media/` folder
-      filename: "logo.svg"
-    button:
-      enable: true
-      text: "Get Started"
-      url: "https://hugoblox.com/templates/"
-    show_search: true
-    show_theme_chooser: true
+    enable: false
 
 # Site footer
 footer:
   copyright:
-    notice: '© {year} My Company'
+    notice: '© {year} My Company' # TODO
 
 # Localization
 locale:

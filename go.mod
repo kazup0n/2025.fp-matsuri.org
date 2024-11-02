@@ -3,6 +3,8 @@ module github.com/HugoBlox/theme-landing-page
 go 1.19
 
 require (
-	github.com/HugoBlox/hugo-blox-builder/modules/blox-plugin-netlify v1.1.2-0.20231108143325-448ed0e3bd2b
-	github.com/HugoBlox/hugo-blox-builder/modules/blox-tailwind v0.2.1-0.20241012174104-661cadc17327
+	github.com/HugoBlox/hugo-blox-builder/modules/blox-plugin-netlify v1.1.2-0.20241027205850-adc14f11d2fc
+	github.com/HugoBlox/hugo-blox-builder/modules/blox-tailwind v0.3.0
 )
+
+require github.com/HugoBlox/hugo-blox-builder/modules/blox-analytics v0.1.3 // indirect
