@@ -35,7 +35,7 @@ header:
 # Site footer
 footer:
   copyright:
-    notice: '© {year} My Company' # TODO
+    notice: '© 2024- Functional Programming Matsuri Committe'
 
 # Localization
 locale:
