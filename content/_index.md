@@ -53,6 +53,18 @@ sections:
           at: 2025年夏頃
           highlight: true
 
+  - block: community/base
+    content:
+      title: Sponsors
+      text: |
+        <div class="border border-black rounded-xl px-8">
+          <div class="text-3xl font-bold text-center py-8">スポンサー募集中！</div>
+          <div class="text-md">
+          関数型まつりの開催には、みなさまのサポートが必要です！現在、イベントを支援していただけるスポンサー企業を募集しています。関数型プログラミングのコミュニティを一緒に盛り上げていきたいという企業の皆さま、ぜひご検討ください。
+
+          スポンサー情報については、後日詳細を公開予定です。興味のある方は、お気軽にお問い合わせください！
+          </div>
+        </div>
   - block: community/people
     content:
       title: Team
