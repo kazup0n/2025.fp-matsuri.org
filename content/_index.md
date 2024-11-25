@@ -39,6 +39,20 @@ sections:
     design:
       spacing:
         padding: ["8rem", 0, "6rem", 0]
+  - block: community/schedule
+    content:
+      title: Schedule
+      schedule:
+        - event: セッション応募開始
+          at: 2025年初め
+        - event: セッション採択結果発表
+          at: 
+        - event: チケット販売開始
+          at: 2025年春頃
+        - event: 関数型まつり開催
+          at: 2025年夏頃
+          highlight: true
+
   - block: community/people
     content:
       title: Team
