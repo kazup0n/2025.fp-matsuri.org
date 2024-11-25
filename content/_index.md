@@ -8,25 +8,25 @@ design:
   spacing: "6rem"
 
 sections:
-  - block: hero
+  - block: community/hero
     content:
       title: 関数型まつり
-      text: 関数型まつりは関数型プログラミングをテーマとして、言語やプラットフォームによらない様々なバックグラウンドの人達の情報共有とコミュニケーションを目的としたカンファレンスです。
       announcement:
         text: "2025年夏頃開催予定"
+      links:
+        - name: X
+          icon: brands/x
+          href: "https://x.com/fp_matsuri"
+          padding: 10px
+        - name: Hatena Blog
+          icon: custom/hatenablog
+          href: "https://hatenablog.com"
     design:
       spacing:
         padding: [0, 0, 0, 0]
-        margin: [0, 0, 0, 0]
-      # For full-screen, add `min-h-screen` below
       css_class: "dark"
       background:
-        color: "navy"
-        # image:
-        #   # Add your image background to `assets/media/`.
-        #   filename: bg-triangles.svg
-        #   filters:
-        #     brightness: 0.5
+        color: "rgb(var(--color-primary))"
   - block: community/people
     content:
       title: Team

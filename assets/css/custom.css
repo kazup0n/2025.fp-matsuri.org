@@ -20,3 +20,35 @@
   font-weight: bold;
 }
 
+/* 画面トップの部分で、tailwindの設定が効かなかったもの */
+.matsuri-hero {
+  height: 100vh;
+  height: 100dvh; /* new browsers */
+  justify-content: center;
+  align-items: center;
+}
+
+.matsuri-hero-links {
+  margin: 32px 24px;
+  gap: 16px;
+  justify-content: flex-end;
+  flex: 0 1 900px;
+}
+
+.matsuri-hero-links-button {
+  width: 40px;
+  height: 40px;
+}
+
+@media all and (min-width: 640px) and (min-height: 640px) {
+  .matsuri-hero-links {
+    margin: 48px;
+    gap: 24px;
+  }
+
+  .matsuri-hero-links-button {
+    width: 56px;
+    height: 56px;
+  }
+}
+
