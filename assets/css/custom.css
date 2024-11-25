@@ -52,3 +52,15 @@
   }
 }
 
+/* メンバー一覧部分で、tailwindの設定が効かなかったもの */
+.people-person {
+  max-width: 150px;
+  min-width: 150px;
+}
+
+@media all and (min-width: 640px) {
+  .people-person {
+    width: 150px;
+  }
+}
+
