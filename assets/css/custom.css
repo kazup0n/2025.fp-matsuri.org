@@ -1,0 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+:root {
+  font-size: 12pt;
+  font-family:  "游明朝" , "Yu Mincho" , "游明朝体" , "YuMincho" , "ヒラギノ明朝 Pro W3" , "Hiragino Mincho Pro" , "HiraMinProN-W3" , "HGS明朝E" , "ＭＳ Ｐ明朝" , "MS PMincho" , serif;
+
+  --color-primary: 16 40 48;
+  --color-on-primary: 240 240 230;
+}
+
+/* セクションタイトル部分のフォント */
+.matsuri-text-title {
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+}
+
+/* セミボールドそのままだと日本語フォントはOSによって太さが変わってくるのでいっそboldに上書き */
+.font-semibold {
+  font-weight: bold;
+}
+
