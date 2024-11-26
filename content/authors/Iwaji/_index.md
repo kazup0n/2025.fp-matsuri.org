@@ -1,4 +1,4 @@
 ---
-title: igrep
+title: Iwaji
 user_groups: ["organizer"]
 ---
