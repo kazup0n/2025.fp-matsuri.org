@@ -1,4 +1,4 @@
 ---
 title: Iwaji
-user_groups: ["organizer"]
+user_groups: ["スタッフ"]
 ---

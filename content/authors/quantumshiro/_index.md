@@ -1,4 +1,4 @@
 ---
 title: quantumshiro
-user_groups: ["organizer"]
+user_groups: ["スタッフ"]
 ---

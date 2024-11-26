@@ -1,4 +1,4 @@
 ---
 title: magnolia-k
-user_groups: ["organizer"]
+user_groups: ["スタッフ"]
 ---

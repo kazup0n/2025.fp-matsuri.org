@@ -1,4 +1,4 @@
 ---
 title: tomoco95
-user_groups: ["organizer"]
+user_groups: ["スタッフ"]
 ---
