@@ -1,4 +1,4 @@
 ---
 title: omiend
-user_groups: ["organizer"]
+user_groups: ["座長"]
 ---

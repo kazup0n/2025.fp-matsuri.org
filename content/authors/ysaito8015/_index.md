@@ -1,4 +1,4 @@
 ---
 title: ysaito8015
-user_groups: ["organizer"]
+user_groups: ["座長"]
 ---
