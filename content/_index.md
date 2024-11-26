@@ -8,25 +8,63 @@ design:
   spacing: "6rem"
 
 sections:
-  - block: hero
+  - block: community/hero
     content:
       title: 関数型まつり
-      text: 関数型まつりは関数型プログラミングをテーマとして、言語やプラットフォームによらない様々なバックグラウンドの人達の情報共有とコミュニケーションを目的としたカンファレンスです。
       announcement:
         text: "2025年夏頃開催予定"
+      links:
+        - name: X
+          icon: brands/x
+          href: "https://x.com/fp_matsuri"
+          padding: 10px
+        - name: Hatena Blog
+          icon: custom/hatenablog
+          href: "https://hatenablog.com"
     design:
       spacing:
         padding: [0, 0, 0, 0]
-        margin: [0, 0, 0, 0]
-      # For full-screen, add `min-h-screen` below
       css_class: "dark"
       background:
-        color: "navy"
-        # image:
-        #   # Add your image background to `assets/media/`.
-        #   filename: bg-triangles.svg
-        #   filters:
-        #     brightness: 0.5
+        color: "rgb(var(--color-primary))"
+  - block: community/base
+    content:
+      title: About
+      text: |
+        関数型プログラミングのカンファレンス「関数型まつり」を開催します！
+
+        関数型プログラミングはメジャーな言語・フレームワークに取り入れられ、広く使われるようになりました。そしてその手法自体も進化し続けています。その一方で「関数型プログラミング」というと「難しい・とっつきにくい」という声もあり、十分普及し切った状態ではありません。
+
+        私たちは様々な背景の方々が関数型プログラミングを通じて新しい知見を得て、交流ができるような場を提供する事を目指しています。普段から関数型言語を活用している方や関数型プログラミングに興味がある方もちろん、最先端のソフトウェア開発技術に興味がある方も是非ご参加ください！
+    design:
+      spacing:
+        padding: ["8rem", 0, "6rem", 0]
+  - block: community/schedule
+    content:
+      title: Schedule
+      schedule:
+        - event: セッション応募開始
+          at: 2025年初め
+        - event: セッション採択結果発表
+          at: 
+        - event: チケット販売開始
+          at: 2025年春頃
+        - event: 関数型まつり開催
+          at: 2025年夏頃
+          highlight: true
+
+  - block: community/base
+    content:
+      title: Sponsors
+      text: |
+        <div class="border border-black rounded-xl px-8">
+          <div class="text-3xl font-bold text-center py-8">スポンサー募集中！</div>
+          <div class="text-md">
+          関数型まつりの開催には、みなさまのサポートが必要です！現在、イベントを支援していただけるスポンサー企業を募集しています。関数型プログラミングのコミュニティを一緒に盛り上げていきたいという企業の皆さま、ぜひご検討ください。
+
+          スポンサー情報については、後日詳細を公開予定です。興味のある方は、お気軽にお問い合わせください！
+          </div>
+        </div>
   - block: community/people
     content:
       title: Team

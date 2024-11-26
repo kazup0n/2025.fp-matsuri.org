@@ -6,10 +6,10 @@
 {{ $page := .wcPage }}
 {{ $block := .wcBlock }}
 
-<div class="flex flex-col items-center mx-auto gap-3 justify-center px-6 md:px-3 lg:px-3">
+<div class="flex flex-col items-center mx-auto gap-3 justify-center px-3">
   {{ with $block.content.title }}
     <div class="col-span-full mb-6 text-center">
-      <h1 class="text-3xl font-bold mb-0">{{ . | markdownify | emojify }}</h1>
+      <h1 class="text-5xl matsuri-text-title mb-0">{{ . | markdownify | emojify }}</h1>
       {{ with $block.content.subtitle }}<p class="mt-2 text-lg">{{ . | markdownify | emojify }}</p>{{ end }}
     </div>
   {{ end }}
@@ -30,12 +30,12 @@
     {{ $query = sort $query $sort_by $sort_order }}
 
     {{if $query | and (gt (len $block.content.user_groups) 1) }}
-      <div class="col-span-full mb-6">
-        <h2 class="text-2xl font-semibold mb-4">{{ . | markdownify }}</h2>
+      <div class="col-span-full my-4">
+        <h2 class="text-2xl font-semibold">{{ . | markdownify }}</h2>
       </div>
     {{end}}
 
-    <div class="grid grid-cols-2 md:grid-cols-5 lg:grid-cols-6 gap-3">
+    <div class="flex flex-row flex-wrap" style="justify-content: space-evenly">
 
     {{ range $query }}
       {{/* Get link to user's profile page. */}}
@@ -44,7 +44,7 @@
           {{ $github := printf "https://github.com/%s" .Params.Title }}
           {{ $src := printf "%s.png" $github }}
           {{ $avatar_shape := site.Params.features.avatar.shape | default "circle" }}
-          <img width="150" height="150" loading="lazy" class="object-cover rounded-full shadow {{if eq $avatar_shape "square"}}rounded-none{{end}}" src="{{ $src }}" alt="Avatar">
+          <img width="150" height="150" loading="lazy" class="object-cover rounded-full shadow" src="{{ $src }}" alt="Avatar">
         </div>
 
         <div class="portrait-title text-center">
@@ -54,9 +54,9 @@
               href="{{ $github | safeURL }}"
               target="_blank" rel="noopener"
             >
-              <h2 class="text-xl font-semibold flex items-center gap-2">
-                {{ partial "functions/get_icon" (dict "name" "brands/github" "attributes" "style=\"height: 1em;\"") }} {{ .Title }}
-              </h2>
+              <div class="text-md font-semibold flex items-center gap-2">
+                {{ .Title }}
+              </div>
             </a>
           </div>
         </div>
