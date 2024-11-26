@@ -1,4 +1,4 @@
 ---
 title: wm3
-user_groups: ["organizer"]
+user_groups: ["スタッフ"]
 ---
