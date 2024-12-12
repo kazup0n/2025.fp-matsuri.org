@@ -20,7 +20,7 @@ sections:
           padding: 10px
         - name: Hatena Blog
           icon: custom/hatenablog
-          href: "https://hatenablog.com"
+          href: "https://blog.fp-matsuri.org/"
     design:
       spacing:
         padding: [0, 0, 0, 0]

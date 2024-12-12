@@ -9,5 +9,5 @@
 
 hugo-bloxというhugo themeの[Hugo Landing Page Theme](https://github.com/HugoBlox/theme-landing-page) を使っています。
 
-- [💻 Edit your Hugo site locally | Hugo Blox Docs https://docs.hugoblox.com/getting-started/install-hugo/] などを参考に `hugo` をインストールしてください
+- [💻 Edit your Hugo site locally | Hugo Blox Docs](https://docs.hugoblox.com/getting-started/install-hugo/) などを参考に `hugo` をインストールしてください
 - `hugo server -D`
