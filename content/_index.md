@@ -39,6 +39,23 @@ sections:
     design:
       spacing:
         padding: ["8rem", 0, "6rem", 0]
+  - block: community/overview
+    content:
+      title: Overview
+      text: |
+          <div class="md:flex flex-wrap justify-between gap-x-8">
+            <div style="min-width: 18rem">
+              <h3 class="font-semibold">Dates</h3>
+              <p>2025.6.14(土)〜15(日)</p>
+            </div>
+            <div style="min-width: 18rem">
+              <h3 class="font-semibold">Place</h3>
+              <p>中野セントラルパーク カンファレンス</p>
+            </div>
+          </div>
+      map: |
+        <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d25918.248217497334!2d139.652939970105!3d35.70700579999999!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6018f34668e0bc27%3A0x7d66caba722762c5!2z5Lit6YeO44K744Oz44OI44Op44Or44OR44O844Kv44Kr44Oz44OV44Kh44Os44Oz44K5!5e0!3m2!1sja!2sjp!4v1736678069354!5m2!1sja!2sjp" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+
   - block: community/schedule
     content:
       title: Schedule
