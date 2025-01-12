@@ -12,7 +12,7 @@ sections:
     content:
       title: 関数型まつり
       announcement:
-        text: "2025年夏頃開催予定"
+        text: "2025.6.14<span style='font-size:70%'> sat</span> – 15<span style='font-size:70%'> sun</span>"
       links:
         - name: X
           icon: brands/x
@@ -67,7 +67,7 @@ sections:
         - event: チケット販売開始
           at: 2025年春頃
         - event: 関数型まつり開催
-          at: 2025年夏頃
+          at: 2025年6月14日-15日
           highlight: true
 
   - block: community/base
