@@ -12,7 +12,7 @@ sections:
     content:
       title: 関数型まつり
       announcement:
-        text: "2025年夏頃開催予定"
+        text: "2025.6.14<span style='font-size:70%'> sat</span> – 15<span style='font-size:70%'> sun</span>"
       links:
         - name: X
           icon: brands/x
@@ -39,6 +39,23 @@ sections:
     design:
       spacing:
         padding: ["8rem", 0, "6rem", 0]
+  - block: community/overview
+    content:
+      title: Overview
+      text: |
+          <div class="md:flex flex-wrap justify-between gap-x-8">
+            <div style="min-width: 18rem">
+              <h3 class="font-semibold">Dates</h3>
+              <p>2025.6.14(土)〜15(日)</p>
+            </div>
+            <div style="min-width: 18rem">
+              <h3 class="font-semibold">Place</h3>
+              <p>中野セントラルパーク カンファレンス</p>
+            </div>
+          </div>
+      map: |
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d25918.24822641297!2d139.64379899847268!3d35.707005772578796!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6018f34668e0bc27%3A0x7d66caba722762c5!2z5Lit6YeO44K744Oz44OI44Op44Or44OR44O844Kv44Kr44Oz44OV44Kh44Os44Oz44K5!5e0!3m2!1sen!2sjp!4v1736684092765!5m2!1sen!2sjp" width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+
   - block: community/schedule
     content:
       title: Schedule
@@ -50,7 +67,7 @@ sections:
         - event: チケット販売開始
           at: 2025年春頃
         - event: 関数型まつり開催
-          at: 2025年夏頃
+          at: 2025.6.14-15
           highlight: true
 
   - block: community/base

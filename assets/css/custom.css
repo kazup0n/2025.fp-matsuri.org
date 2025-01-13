@@ -8,6 +8,13 @@
   --color-on-primary: 240 240 230;
 }
 
+/* Hugoのビルドが上手くいかなくてセットされないTailwindのスタイル(暫定対応) */
+@media (min-width: 640px) {
+    .sm\:text-2xl {
+        font-size: 1.5rem;
+    }
+}
+
 /* セクションタイトル部分のフォント */
 .matsuri-text-title {
   font-family: "Montserrat", sans-serif;
