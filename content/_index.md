@@ -67,7 +67,7 @@ sections:
         - event: チケット販売開始
           at: 2025年春頃
         - event: 関数型まつり開催
-          at: 2025年6月14日-15日
+          at: 2025.6.14-15
           highlight: true
 
   - block: community/base
