@@ -4,7 +4,7 @@
 # This file is formatted using YAML syntax - learn more at https://learnxinyminutes.com/docs/yaml/
 
 title: 関数型まつり # Website name
-baseURL: 'https://example.com/' # TODO
+baseURL: 'https://2025.fp-matsuri.org/'
 
 ############################
 ## PAGE OPTIONS
