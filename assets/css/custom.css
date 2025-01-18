@@ -2,17 +2,21 @@
 
 :root {
   font-size: 12pt;
-  font-family:  "游明朝" , "Yu Mincho" , "游明朝体" , "YuMincho" , "ヒラギノ明朝 Pro W3" , "Hiragino Mincho Pro" , "HiraMinProN-W3" , "HGS明朝E" , "ＭＳ Ｐ明朝" , "MS PMincho" , serif;
+  font-family: "游明朝", "Yu Mincho", "游明朝体", "YuMincho", "ヒラギノ明朝 Pro W3", "Hiragino Mincho Pro", "HiraMinProN-W3", "HGS明朝E", "ＭＳ Ｐ明朝", "MS PMincho", serif;
 
   --color-primary: 16 40 48;
   --color-on-primary: 240 240 230;
 }
 
+/* ------------------------------------
+トップページ
+------------------------------------ */
+
 /* Hugoのビルドが上手くいかなくてセットされないTailwindのスタイル(暫定対応) */
 @media (min-width: 640px) {
-    .sm\:text-2xl {
-        font-size: 1.5rem;
-    }
+  .sm\:text-2xl {
+    font-size: 1.5rem;
+  }
 }
 
 /* セクションタイトル部分のフォント */
@@ -30,7 +34,8 @@
 /* 画面トップの部分で、tailwindの設定が効かなかったもの */
 .matsuri-hero {
   height: 100vh;
-  height: 100dvh; /* new browsers */
+  height: calc(100vh - var(--navbar-height));
+  height: calc(100dvh - var(--navbar-height));
   justify-content: center;
   align-items: center;
 }
@@ -71,3 +76,47 @@
   }
 }
 
+/* ------------------------------------
+行動規範
+------------------------------------ */
+
+.section_figure {
+  text-align: center;
+}
+
+.section_movie {
+  max-width: 100%;
+}
+
+.section_text a {
+  font-weight: bold;
+}
+
+.section_note {
+  background-color: #F1F1F1;
+  font-weight: bold;
+  line-height: 26px;
+  font-size: 16px;
+  letter-spacing: 0.1em;
+  padding: 40px;
+  margin-top: 20px;
+}
+
+.section_note_item {
+  padding-left: 22px;
+  position: relative;
+  margin-bottom: 5px;
+  list-style: none;
+}
+
+.section_note_item::before {
+  content: "";
+  display: block;
+  width: 6px;
+  height: 6px;
+  background: #000000;
+  border-radius: 3px;
+  position: absolute;
+  top: 11px;
+  left: 0;
+}

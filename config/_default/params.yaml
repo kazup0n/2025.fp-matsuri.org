@@ -31,7 +31,16 @@ marketing:
 # Site header
 header:
   navbar:
-    enable: false
+    enable: true
+    align: "left"
+    fixed_to_top: true
+
+    logo:
+      # Logo text
+      text: "関数型まつり"
+
+    # Let the user choose between light or dark mode?
+    show_theme_chooser: false
 
 # Site footer
 footer:
