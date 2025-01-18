@@ -2,7 +2,7 @@
 
 :root {
   font-size: 12pt;
-  font-family:  "游明朝" , "Yu Mincho" , "游明朝体" , "YuMincho" , "ヒラギノ明朝 Pro W3" , "Hiragino Mincho Pro" , "HiraMinProN-W3" , "HGS明朝E" , "ＭＳ Ｐ明朝" , "MS PMincho" , serif;
+  font-family: "游明朝", "Yu Mincho", "游明朝体", "YuMincho", "ヒラギノ明朝 Pro W3", "Hiragino Mincho Pro", "HiraMinProN-W3", "HGS明朝E", "ＭＳ Ｐ明朝", "MS PMincho", serif;
 
   --color-primary: 16 40 48;
   --color-on-primary: 240 240 230;
@@ -34,7 +34,8 @@
 /* 画面トップの部分で、tailwindの設定が効かなかったもの */
 .matsuri-hero {
   height: 100vh;
-  height: 100dvh; /* new browsers */
+  height: 100dvh;
+  /* new browsers */
   justify-content: center;
   align-items: center;
 }
@@ -79,43 +80,12 @@
 行動規範
 ------------------------------------ */
 
-/* section */
-.section {
-  max-width: 980px;
-  width: calc(100% - 40px);
-  margin: 100px auto 100px;
-}
-
 .section_figure {
   text-align: center;
 }
 
 .section_movie {
   max-width: 100%;
-}
-
-.section_title {
-  text-align: center;
-}
-
-.section_title .section_title_inner {
-  background-color: #333;
-  font-weight: bold;
-  line-height: 49px;
-  font-size: 30px;
-  text-align: center;
-  letter-spacing: 0.05em;
-  color: #FFFFFF;
-  display: inline-block;
-  padding: 10px 56px;
-}
-
-.section_text {
-  margin-top: 60px;
-  line-height: 26px;
-  font-size: 16px;
-  letter-spacing: 0.1em;
-  color: #000000;
 }
 
 .section_text a {
@@ -148,8 +118,4 @@
   position: absolute;
   top: 11px;
   left: 0;
-}
-
-@media screen and (max-width: $viewport - 1) {
-  @import "section_sp";
 }
