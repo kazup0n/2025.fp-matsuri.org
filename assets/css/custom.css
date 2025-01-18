@@ -34,8 +34,8 @@
 /* 画面トップの部分で、tailwindの設定が効かなかったもの */
 .matsuri-hero {
   height: 100vh;
-  height: 100dvh;
-  /* new browsers */
+  height: calc(100vh - var(--navbar-height));
+  height: calc(100dvh - var(--navbar-height));
   justify-content: center;
   align-items: center;
 }
