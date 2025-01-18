@@ -90,15 +90,6 @@
   text-align: center;
 }
 
-.section_figcaption {
-  line-height: 20px;
-  font-size: 12px;
-  text-align: center;
-  letter-spacing: 0.1em;
-  margin-top: 10px;
-  color: #555555;
-}
-
 .section_movie {
   max-width: 100%;
 }

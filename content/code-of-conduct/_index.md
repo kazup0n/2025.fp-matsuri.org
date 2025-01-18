@@ -10,7 +10,7 @@ design:
 sections:
   - block: community/code-of-conduct
     content:
-      title: 行動規範
+      organization: 関数型まつり
 
     design:
       spacing:
