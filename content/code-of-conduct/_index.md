@@ -12,11 +12,15 @@ sections:
     content:
       title: 行動規範マナー動画
       text: |
-        <figure class="section_figure">
-          <iframe class="section_movie" width="900" height="450" src="https://www.youtube.com/embed/lIfOQNTWdxI"
-            frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
-          </iframe>
-        </figure>
+        <div class="section_note">
+          関数型まつりの行動規範は <a href="https://scalamatsuri.org/">ScalaMatsuri</a> の行動規範に基づいています。ScalaMatsuri の行動規範は動画で見る事ができます。
+
+          <figure class="section_figure">
+            <iframe class="section_movie" width="900" height="450" src="https://www.youtube.com/embed/lIfOQNTWdxI"
+              frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+            </iframe>
+          </figure>
+        </div>
   - block: community/base
     content:
       title: はじめに
