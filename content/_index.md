@@ -63,7 +63,7 @@ sections:
         - event: '[セッション応募開始](https://fortee.jp/2025fp-matsuri/speaker/proposal/cfp)'
           at: 2025年1月20日
         - event: セッション採択結果発表
-          at: 
+          at: 2025年3月中
         - event: チケット販売開始
           at: 2025年春頃
         - event: 関数型まつり開催
