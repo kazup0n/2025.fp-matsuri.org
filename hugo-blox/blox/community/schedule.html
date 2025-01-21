@@ -24,7 +24,7 @@
           <div class="flex items-center" style="margin:2px 0; height:var(--row-height);">
             <div class="rounded-full" style="margin-left:2px; width:var(--point-size); height:var(--point-size); background:rgba(var(--color-on-primary))"></div>
             <div class="pl-4" style="margin-left: var(--content-margin)">
-              <div class="{{ if .highlight }}text-3xl{{else}}text-lg{{end}} font-bold">{{ .event }}</div>
+              <div class="{{ if .highlight }}text-3xl{{else}}text-lg{{end}} font-bold">{{ .event | markdownify }}</div>
               <div class="text-sm">{{ .at }}</div>
             </div>
           </div>

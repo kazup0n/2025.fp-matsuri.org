@@ -60,8 +60,8 @@ sections:
     content:
       title: Schedule
       schedule:
-        - event: セッション応募開始
-          at: 2025年初め
+        - event: '[セッション応募開始](https://fortee.jp/2025fp-matsuri/speaker/proposal/cfp)'
+          at: 2025年1月20日
         - event: セッション採択結果発表
           at: 
         - event: チケット販売開始
