@@ -24,10 +24,15 @@ sections:
         - name: X
           icon: brands/x
           href: "https://x.com/fp_matsuri"
-          padding: 10px
+          padding: 0.4em
         - name: Hatena Blog
           icon: custom/hatenablog
           href: "https://blog.fp-matsuri.org/"
+        - name: Fortee
+          # https://fortee.jp/favicon.svg よりコピー
+          icon: custom/fortee
+          padding: 0.4em
+          href: https://fortee.jp/2025fp-matsuri
     design:
       spacing:
         padding: [0, 0, 0, 0]

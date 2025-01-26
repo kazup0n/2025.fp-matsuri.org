@@ -55,7 +55,7 @@
 
 .matsuri-hero-links {
   margin: 32px 24px;
-  gap: 16px;
+  gap: 12px;
   justify-content: flex-end;
   flex: 0 1 900px;
 }
@@ -68,7 +68,7 @@
 @media all and (min-width: 640px) and (min-height: 640px) {
   .matsuri-hero-links {
     margin: 48px;
-    gap: 24px;
+    gap: 16px;
   }
 
   .matsuri-hero-links-button {
