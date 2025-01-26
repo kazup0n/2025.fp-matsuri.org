@@ -11,16 +11,28 @@ sections:
   - block: community/hero
     content:
       title: 関数型まつり
-      announcement:
+      date:
         text: "2025.6.14<span style='font-size:70%'> sat</span> – 15<span style='font-size:70%'> sun</span>"
+      announcement:
+        text: セッションを募集中です(2025/3/2まで)
+        links:
+          - text: セッションに応募する
+            href: https://fortee.jp/2025fp-matsuri/speaker/proposal/cfp
+          - text: 応募中のセッション一覧を見る
+            href: https://fortee.jp/2025fp-matsuri/proposal/all
       links:
         - name: X
           icon: brands/x
           href: "https://x.com/fp_matsuri"
-          padding: 10px
+          padding: 0.4em
         - name: Hatena Blog
           icon: custom/hatenablog
           href: "https://blog.fp-matsuri.org/"
+        - name: Fortee
+          # https://fortee.jp/favicon.svg よりコピー
+          icon: custom/fortee
+          padding: 0.4em
+          href: https://fortee.jp/2025fp-matsuri
     design:
       spacing:
         padding: [0, 0, 0, 0]
