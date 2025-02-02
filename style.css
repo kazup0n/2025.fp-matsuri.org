@@ -1,0 +1,402 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+:root {
+  font-size: 12pt;
+  font-family: "游明朝", "Yu Mincho", "游明朝体", "YuMincho", "ヒラギノ明朝 Pro W3", "Hiragino Mincho Pro", "HiraMinProN-W3", "HGS明朝E", "ＭＳ Ｐ明朝", "MS PMincho", serif;
+
+  --navbar-height: 72px;
+
+  --color-primary: 16 40 48;
+  --color-on-primary: 240 240 230;
+  --color-accent: 233 30 99;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+/* ------------------------------------
+ページ共通
+------------------------------------ */
+
+/* Hugoのビルドが上手くいかなくてセットされないTailwindのスタイル(暫定対応) */
+@media (min-width: 640px) {
+  .sm\:text-2xl {
+    font-size: 1.5rem;
+  }
+}
+
+.site-header {
+  padding: 0.75rem;
+  display: flex;
+  align-items: center;
+  column-gap: 1.5rem;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.1) 0px 1px 2px -1px;
+}
+
+.site-header>h1 {
+  margin: 0;
+  line-height: 1;
+}
+
+.site-header>h1>a {
+  display: block;
+  font-size: 1.25rem;
+  font-weight: 600;
+  text-decoration: inherit;
+  color: #000;
+}
+
+.site-header>nav>a {
+  display: block;
+  padding: 0.75rem 0.5rem;
+  font-weight: 600;
+  text-decoration: inherit;
+  color: inherit;
+}
+
+.site-footer {
+  padding: 2rem;
+  text-align: center;
+  color: rgb(51 65 85);
+}
+
+/* ------------------------------------
+トップページ
+------------------------------------ */
+
+p.note {
+  font-size: 0.875rem;
+  color: rgb(64, 64, 64);
+}
+
+p.note::before {
+  content: "※";
+}
+
+section {
+  padding: 8rem 1.5rem 6rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: 2.25rem;
+}
+
+section p {
+  line-height: 1.75;
+}
+
+section>* {
+  max-width: 65ch;
+}
+
+section>h2 {
+  margin: 0;
+  font-family: montserrat, sans-serif;
+  font-optical-sizing: auto;
+  line-height: 1;
+  font-size: 3rem;
+  font-weight: 300;
+
+}
+
+.hero {
+  height: calc(100vh - var(--navbar-height));
+  height: calc(100dvh - var(--navbar-height));
+  padding: 48px;
+  display: grid;
+  grid-template-rows: 1fr auto auto 3rem auto 1fr auto;
+  place-items: center;
+  row-gap: 8px;
+  background-color: rgb(16, 40, 48);
+  color: rgb(243, 244, 246);
+}
+
+.hero h1 {
+  grid-row: 2;
+  margin: 0;
+  line-height: 1;
+  font-size: 3rem;
+  font-weight: inherit;
+  letter-spacing: -0.25rem;
+}
+
+@media all and (min-width: 640px) {
+  .hero h1 {
+    font-size: 4.5rem;
+  }
+}
+
+.hero .date {
+  grid-row: 3;
+  font-family: montserrat, sans-serif;
+  font-size: 1rem;
+  font-weight: 300;
+  color: rgb(209, 213, 219);
+}
+
+@media all and (min-width: 640px) {
+  .hero .date {
+    font-size: 1.5rem;
+  }
+}
+
+
+.hero .announcement {
+  grid-row: 5;
+
+  display: flex;
+  flex-direction: column;
+  row-gap: 1rem;
+  padding: 1rem;
+  font-size: 0.875rem;
+  border-radius: 0.375rem;
+  background-color: rgba(255 255 255 / 0.1);
+}
+
+.hero .announcement .buttons {
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.5rem;
+}
+
+.hero .announcement a.button {
+  display: block;
+  padding: 4px;
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  border-radius: 6px;
+  background: rgb(var(--color-accent));
+  color: inherit;
+}
+
+.hero .links {
+  grid-row: 7;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+
+  display: flex;
+  justify-content: flex-end;
+  column-gap: 1rem;
+}
+
+.hero .links>li {
+  list-style: none;
+}
+
+.hero .icon-button {
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 100%;
+  background-color: rgb(222 227 237 / 0.4);
+}
+
+.hero .icon-button>:where(.x, .fortee) {
+  width: 50%;
+  height: 50%;
+}
+
+.hero .icon-button>.hatena_blog {
+  width: 100%;
+  height: 100%;
+}
+
+.prose {
+  width: 100%;
+}
+
+.prose h3 {
+  margin-top: 1.6em;
+  margin-bottom: 0.6em;
+}
+
+.map {
+  max-width: 800px;
+}
+
+ul.schedule {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+ul.schedule>li.event {
+  display: grid;
+  grid-template-columns: 18px 1fr;
+  grid-template-rows: 2rem repeat(2, auto) 2rem;
+  column-gap: 40px;
+  list-style: none;
+}
+
+li.event::before {
+  grid-column: 1;
+  grid-row: 1 / -1;
+  content: "";
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(16, 40, 48);
+}
+
+li.event:first-child::before {
+  align-self: end;
+  height: calc(50% + 9px);
+  border-radius: 9px 9px 0 0;
+}
+
+li.event:last-child::before {
+  height: calc(50% + 9px);
+  border-radius: 0 0 9px 9px;
+}
+
+li.event::after {
+  grid-column: 1;
+  grid-row: 1 / -1;
+  align-self: center;
+  justify-self: center;
+  content: "";
+  display: block;
+  width: 14px;
+  height: 14px;
+  border-radius: 100px;
+  background-color: #FFF;
+}
+
+li.event>h3 {
+  grid-column: 2;
+  grid-row: 2;
+  margin-block: 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+li.event>h3.highlight {
+  font-size: 1.875rem;
+}
+
+li.event>p {
+  grid-column: 2;
+  grid-row: 3;
+  margin-block: 0;
+  font-size: 0.875rem;
+}
+
+.sponsors {
+  padding-inline: 2rem;
+  border: 1px solid;
+  border-radius: 0.75rem;
+  border-color: #000;
+}
+
+.sponsors h3 {
+  margin: 0;
+  padding-block: 2rem;
+  text-align: center;
+  line-height: 2.25rem;
+  font-size: 1.875rem;
+  font-weight: 700;
+}
+
+.sponsors p {
+  margin-block: 1.25rem;
+}
+
+.people {
+  max-width: none;
+}
+
+.people>h3 {
+  text-align: center;
+}
+
+.people ul {
+  padding: 0;
+
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.people li.person {
+  width: 150px;
+  margin: 0;
+  padding: 0.75rem;
+  list-style: none;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: 0.5rem;
+}
+
+.people .person>img {
+  max-width: 100%;
+  border-radius: 100%;
+}
+
+.people .person>a {
+  font-weight: bold;
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ------------------------------------
+行動規範
+------------------------------------ */
+
+section.coc {
+  padding-block: 3rem;
+}
+
+.section_figure {
+  margin-inline: 0;
+  text-align: center;
+}
+
+.section_movie {
+  max-width: 100%;
+}
+
+.section_text a {
+  font-weight: bold;
+}
+
+.section_note {
+  background-color: #F1F1F1;
+  font-weight: bold;
+  line-height: 26px;
+  font-size: 16px;
+  letter-spacing: 0.1em;
+  padding: 40px;
+  margin-top: 20px;
+}
+
+.section_note_item {
+  padding-left: 22px;
+  position: relative;
+  margin-bottom: 5px;
+  list-style: none;
+}
+
+.section_note_item::before {
+  content: "";
+  display: block;
+  width: 6px;
+  height: 6px;
+  background: #000000;
+  border-radius: 3px;
+  position: absolute;
+  top: 11px;
+  left: 0;
+}
