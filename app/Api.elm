@@ -19,7 +19,7 @@ routes :
     BackendTask FatalError (List Route)
     -> (Maybe { indent : Int, newLines : Bool } -> Html Never -> String)
     -> List (ApiRoute ApiRoute.Response)
-routes getStaticRoutes htmlToString =
+routes getStaticRoutes _ =
     [ sitemap <| makeSitemapEntries getStaticRoutes ]
 
 
@@ -59,7 +59,7 @@ makeSitemapEntries getStaticRoutes =
             case route of
                 Slug_ routeParam ->
                     Route__slug_.data routeParam
-                        |> BackendTask.andThen (\data -> routeSource (Iso8601.fromTime Pages.builtAt))
+                        |> BackendTask.andThen (\_ -> routeSource (Iso8601.fromTime Pages.builtAt))
                         |> Just
 
                 Index ->

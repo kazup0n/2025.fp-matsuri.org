@@ -47,7 +47,7 @@ data =
 head :
     App Data ActionData RouteParams
     -> List Head.Tag
-head app =
+head _ =
     Site.summaryLarge { pageTitle = "" }
         |> Head.Seo.website
 
@@ -60,7 +60,7 @@ view :
     App Data ActionData RouteParams
     -> Shared.Model
     -> View (PagesMsg Msg)
-view app shared =
+view _ _ =
     { title = ""
     , body =
         [ hero
