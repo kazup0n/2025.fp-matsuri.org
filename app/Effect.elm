@@ -74,7 +74,7 @@ perform :
     }
     -> Effect pageMsg
     -> Cmd msg
-perform ({ fromPageMsg, key } as helpers) effect =
+perform ({ fromPageMsg } as helpers) effect =
     case effect of
         None ->
             Cmd.none

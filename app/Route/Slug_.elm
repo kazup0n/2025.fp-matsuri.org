@@ -156,7 +156,7 @@ view :
     App Data ActionData RouteParams
     -> Shared.Model
     -> View (PagesMsg Msg)
-view app shared =
+view app _ =
     let
         metadata =
             app.data.metadata
