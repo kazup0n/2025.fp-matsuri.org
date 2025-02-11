@@ -1,14 +1,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
 :root {
-  font-size: 12pt;
-  font-family: "游明朝", "Yu Mincho", "游明朝体", "YuMincho", "ヒラギノ明朝 Pro W3", "Hiragino Mincho Pro", "HiraMinProN-W3", "HGS明朝E", "ＭＳ Ｐ明朝", "MS PMincho", serif;
-
   --navbar-height: 72px;
+
+  --serif: "Hiragino Mincho ProN", "ヒラギノ明朝 ProN", "Hiragino Mincho ProN", "游明朝", YuMincho, "HG明朝E", "ＭＳ Ｐ明朝", "ＭＳ 明朝", serif;
+  --serif-logo: "游明朝", "Yu Mincho", "游明朝体", "YuMincho", "ヒラギノ明朝 Pro W3", "Hiragino Mincho Pro", "HiraMinProN-W3", "HGS明朝E", "ＭＳ Ｐ明朝", "MS PMincho", serif;
+
+  /* [2024年に最適なfont-familyの書き方](https://ics.media/entry/200317/) */
+  --sans-serif: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
 
   --color-primary: 16 40 48;
   --color-on-primary: 240 240 230;
   --color-accent: 233 30 99;
+
+  font-size: 12pt;
+  font-family: var(--serif);
 }
 
 * {
@@ -45,6 +51,7 @@ body {
 
 .site-header>h1>a {
   display: block;
+  font-family: var(--serif-logo);
   font-size: 1.25rem;
   font-weight: 600;
   text-decoration: inherit;
@@ -63,6 +70,50 @@ body {
   padding: 2rem;
   text-align: center;
   color: rgb(51 65 85);
+}
+
+/* ------------------------------------
+Markdown
+------------------------------------ */
+
+.markdown {
+  max-width: 32.5em;
+  font-family: var(--sans-serif);
+}
+
+.markdown>* {
+  margin-block: 1.5em;
+}
+
+.markdown>:first-child {
+  margin-block: 0;
+}
+
+.markdown h2 {
+  margin: 7rem 0 2.5rem;
+  line-height: 1;
+  text-align: center;
+  font-size: 2rem;
+  font-weight: normal;
+}
+
+.markdown p,
+.markdown ul {
+  font-family: var(--serif);
+  letter-spacing: 0.01em;
+  line-height: 1.75;
+}
+
+.markdown li {
+  padding-left: 0.3em;
+}
+
+.markdown li+li {
+  margin-top: 0.25em;
+}
+
+.markdown li::marker {
+  font-size: 1.4em;
 }
 
 /* ------------------------------------
@@ -87,13 +138,6 @@ section {
   row-gap: 2.25rem;
 }
 
-section p {
-  line-height: 1.75;
-}
-
-section>* {
-  max-width: 65ch;
-}
 
 section>h2 {
   margin: 0;
@@ -121,6 +165,7 @@ section>h2 {
   grid-row: 2;
   margin: 0;
   line-height: 1;
+  font-family: var(--serif-logo);
   font-size: 3rem;
   font-weight: inherit;
   letter-spacing: -0.25rem;
@@ -218,6 +263,8 @@ section>h2 {
 .prose h3 {
   margin-top: 1.6em;
   margin-bottom: 0.6em;
+  font-family: var(--serif);
+  font-weight: bold;
 }
 
 .map {
@@ -278,7 +325,6 @@ li.event>h3 {
   grid-row: 2;
   margin-block: 0;
   font-size: 1.125rem;
-  font-weight: 700;
 }
 
 li.event>h3.highlight {
@@ -301,23 +347,22 @@ li.event>p {
 
 .sponsors h3 {
   margin: 0;
-  padding-block: 2rem;
+  padding-block: 2rem 0.5rem;
+  font-family: var(--serif);
   text-align: center;
   line-height: 2.25rem;
   font-size: 1.875rem;
-  font-weight: 700;
+  font-weight: normal;
 }
 
 .sponsors p {
   margin-block: 1.25rem;
 }
 
-.people {
-  max-width: none;
-}
-
 .people>h3 {
   text-align: center;
+  font-family: var(--serif);
+  font-weight: bold;
 }
 
 .people ul {
@@ -346,7 +391,6 @@ li.event>p {
 }
 
 .people .person>a {
-  font-weight: bold;
   color: inherit;
   text-decoration: none;
 }
@@ -359,24 +403,6 @@ section.coc {
   padding-block: 3rem;
 }
 
-section.coc h2 {
-  margin: 0 0 2.5rem;
-  font-family: montserrat, sans-serif;
-  font-optical-sizing: auto;
-  line-height: 1;
-  text-align: center;
-  font-size: 3rem;
-  font-weight: 300;
-}
-
-section.coc *+h2 {
-  margin-top: 8rem;
-}
-
-section.coc p+p {
-  margin-block: 1.75em;
-}
-
 .section_figure {
   margin-inline: 0;
   text-align: center;
@@ -386,38 +412,36 @@ section.coc p+p {
   max-width: 100%;
 }
 
-.section_text a {
-  font-weight: bold;
-}
-
-section.coc ul,
-section.coc blockquote,
+.markdown ul,
+.markdown blockquote,
 .section_note {
+  margin-block: 2em;
+  width: calc(100% + 1em);
+  translate: -0.5em;
   margin-inline: 0;
   background-color: #F1F1F1;
-  font-weight: bold;
-  line-height: 26px;
   font-size: 16px;
-  letter-spacing: 0.1em;
-  padding: 40px;
-  margin-top: 20px;
+  padding: 1em 1.5em;
+  border-radius: 10px;
 }
 
-section.coc li {
-  padding-left: 22px;
-  position: relative;
-  margin-bottom: 5px;
-  list-style: none;
+.markdown ul {
+  padding: 1em 1.5em 1em 2em;
 }
 
-section.coc li::before {
-  content: "";
-  display: block;
-  width: 6px;
-  height: 6px;
-  background: #000000;
-  border-radius: 3px;
-  position: absolute;
-  top: 11px;
-  left: 0;
+
+@media all and (min-width: 640px) {
+
+  .markdown ul,
+  .markdown blockquote,
+  .section_note {
+    width: calc(100% + 4em);
+    translate: -2em;
+    padding: 2em;
+  }
+
+  .markdown ul {
+    padding: 2em 2em 2em 55px;
+  }
+
 }
