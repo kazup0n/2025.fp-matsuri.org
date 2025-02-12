@@ -246,16 +246,20 @@ teamBlock : Html msg
 teamBlock =
     let
         listItem member =
-            li [ class "person" ]
-                [ img [ src ("https://github.com/" ++ member.id ++ ".png") ] []
-                , a [ href ("https://github.com/" ++ member.id), target "_blank" ] [ text member.id ]
+            li []
+                [ a [ class "person", href ("https://github.com/" ++ member.id), target "_blank" ]
+                    [ img [ src ("https://github.com/" ++ member.id ++ ".png") ] []
+                    , text member.id
+                    ]
                 ]
     in
     block "Team"
-        [ div [ class "people" ]
+        [ div [ class "people leaders" ]
             [ h3 [] [ text "座長" ]
             , ul [] (List.map listItem staff.leader)
-            , h3 [] [ text "スタッフ" ]
+            ]
+        , div [ class "people staff" ]
+            [ h3 [] [ text "スタッフ" ]
             , ul [] (List.map listItem staff.members)
             ]
         ]
