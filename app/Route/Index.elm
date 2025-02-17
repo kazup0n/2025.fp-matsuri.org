@@ -233,10 +233,16 @@ sponsorsBlock =
                 [ text "関数型まつりの開催には、みなさまのサポートが必要です！現在、イベントを支援していただけるスポンサー企業を募集しています。関数型プログラミングのコミュニティを一緒に盛り上げていきたいという企業のみなさま、ぜひご検討ください。"
                 ]
             , p []
-                [ text "スポンサープランの詳細は、2025年初頭に公開を予定しております。"
-                , text "ご興味をお持ちの企業様は、ぜひ"
-                , a [ href "https://scalajp.notion.site/1566d12253aa80229b3bc0a015497cb4?pvs=105" ] [ text "お問い合わせフォーム" ]
-                , text "よりお気軽にご連絡ください。後日、担当者よりご連絡を差し上げます。"
+                [ text "スポンサープランの詳細は "
+                , a [ href "https://docs.google.com/presentation/d/1zMj4lBBr9ru6oAQEUJ01jrzl9hqX1ajs0zdb-73ngto/edit?usp=sharing", target "_blank" ] [ text "スポンサーシップのご案内" ]
+                , text " よりご確認いただけます。スポンサーには"
+                , a [ href "https://scalajp.notion.site/d5f10ec973fb4e779d96330d13b75e78", target "_blank" ] [ text "お申し込みフォーム" ]
+                , text " からお申し込みいただけます。"
+                ]
+            , p []
+                [ text "ご不明点などありましたら、ぜひ"
+                , a [ href "https://scalajp.notion.site/19c6d12253aa8068958ee110dbe8d38d" ] [ text "お問い合わせフォーム" ]
+                , text "よりお気軽にお問い合わせください。"
                 ]
             ]
         ]
