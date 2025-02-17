@@ -234,14 +234,14 @@ sponsorsBlock =
                 ]
             , p []
                 [ text "スポンサープランの詳細は "
-                , a [ href "", target "_blank" ] [ text "スポンサーシップのご案内" ]
+                , a [ href "https://docs.google.com/presentation/d/1zMj4lBBr9ru6oAQEUJ01jrzl9hqX1ajs0zdb-73ngto/edit?usp=sharing", target "_blank" ] [ text "スポンサーシップのご案内" ]
                 , text " よりご確認いただけます。スポンサーには"
-                , a [ href "", target "_blank" ] [ text "お申し込みフォーム" ]
+                , a [ href "https://scalajp.notion.site/d5f10ec973fb4e779d96330d13b75e78", target "_blank" ] [ text "お申し込みフォーム" ]
                 , text " からお申し込みいただけます。"
                 ]
             , p []
                 [ text "ご不明点などありましたら、ぜひ"
-                , a [ href "" ] [ text "お問い合わせフォーム" ]
+                , a [ href "https://scalajp.notion.site/19c6d12253aa8068958ee110dbe8d38d" ] [ text "お問い合わせフォーム" ]
                 , text "よりお気軽にお問い合わせください。"
                 ]
             ]
