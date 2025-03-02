@@ -1,11 +1,14 @@
 module Route.Index exposing (ActionData, Data, Model, Msg, route)
 
 import BackendTask exposing (BackendTask)
+import Css exposing (..)
+import Css.Extra exposing (columnGap, content_, grid, gridColumn, gridRow, marginBlock)
+import Css.Global exposing (withClass)
 import FatalError exposing (FatalError)
 import Head
 import Head.Seo
-import Html exposing (Html, a, br, div, h1, h2, h3, iframe, img, li, p, section, span, text, ul)
-import Html.Attributes exposing (attribute, class, height, href, src, style, target)
+import Html.Styled as Html exposing (Html, a, br, div, h1, h2, h3, iframe, img, li, p, section, span, text, ul)
+import Html.Styled.Attributes as Attributes exposing (attribute, class, css, href, src, style)
 import PagesMsg exposing (PagesMsg)
 import RouteBuilder exposing (App, StatelessRoute)
 import Shared
@@ -64,11 +67,11 @@ view _ _ =
     { title = ""
     , body =
         [ hero
-        , aboutBlock
-        , overviewBlock
-        , scheduleBlock
-        , sponsorsBlock
-        , teamBlock
+        , aboutSection
+        , overviewSection
+        , scheduleSection
+        , sponsorsSection
+        , teamSection
         ]
     }
 
@@ -94,7 +97,7 @@ hero =
                     , text "ご応募ありがとうございました。"
                     ]
                 , div [ class "buttons" ]
-                    [ a [ class "button", href "https://fortee.jp/2025fp-matsuri/proposal/all", target "_blank" ]
+                    [ a [ class "button", href "https://fortee.jp/2025fp-matsuri/proposal/all", Attributes.target "_blank" ]
                         [ text "応募中のセッション一覧を見る" ]
                     ]
                 ]
@@ -128,9 +131,9 @@ links =
     ]
 
 
-aboutBlock : Html msg
-aboutBlock =
-    block "About"
+aboutSection : Html msg
+aboutSection =
+    section "About"
         [ div [ class "markdown" ]
             [ p [] [ text "関数型プログラミングのカンファレンス「関数型まつり」を開催します！" ]
             , p []
@@ -146,8 +149,8 @@ aboutBlock =
         ]
 
 
-overviewBlock : Html msg
-overviewBlock =
+overviewSection : Html msg
+overviewSection =
     let
         item key value =
             div [ style "min-width" "18rem" ]
@@ -155,7 +158,7 @@ overviewBlock =
                 , p [] [ text value ]
                 ]
     in
-    block "Overview"
+    section "Overview"
         [ div [ class "markdown prose" ]
             [ item "Dates"
                 "2025.6.14(土)〜15(日)"
@@ -166,7 +169,7 @@ overviewBlock =
             [ class "map"
             , src "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d25918.24822641297!2d139.64379899847268!3d35.707005772578796!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6018f34668e0bc27%3A0x7d66caba722762c5!2z5Lit6YeO44K744Oz44OI44Op44Or44OR44O844Kv44Kr44Oz44OV44Kh44Os44Oz44K5!5e0!3m2!1sen!2sjp!4v1736684092765!5m2!1sen!2sjp"
             , attribute "width" "100%"
-            , height 400
+            , Attributes.height 400
             , style "border" "0"
             , attribute "allowfullscreen" ""
             , attribute "loading" "lazy"
@@ -176,13 +179,85 @@ overviewBlock =
         ]
 
 
-scheduleBlock : Html msg
-scheduleBlock =
+scheduleSection : Html msg
+scheduleSection =
+    section "Schedule"
+        [ schedule events
+        , note "記載されているスケジュールの一部は予告なく変更されることがございます。"
+        ]
+
+
+schedule : List (Event msg) -> Html msg
+schedule events_ =
     let
         listItem event =
-            li [ class "event" ]
-                [ h3 [ class (highlight event.highlight) ] [ event.label ]
-                , p [] [ text event.at ]
+            li
+                [ class "event"
+                , css
+                    [ display grid
+                    , property "grid-template-columns " "18px 1fr"
+                    , property "grid-template-rows" "2rem repeat(2, auto) 2rem"
+                    , columnGap (px 40)
+                    , listStyleType none
+                    , -- タイムラインの軸部分
+                      before
+                        [ gridColumn "1"
+                        , gridRow "1 / -1"
+                        , content_ ""
+                        , display block
+                        , width (pct 100)
+                        , height (pct 100)
+                        , backgroundColor (rgb 16 40 48)
+                        ]
+                    , -- タイムラインのドット部分
+                      after
+                        [ gridColumn "1"
+                        , gridRow "1 / -1"
+                        , alignSelf center
+                        , property "justify-self" "center"
+                        , content_ ""
+                        , display block
+                        , width (px 14)
+                        , height (px 14)
+                        , borderRadius (pct 100)
+                        , backgroundColor (hex "FFF")
+                        ]
+                    , firstChild
+                        [ before
+                            [ alignSelf end
+                            , height (calc (pct 50) plus (px 9))
+                            , borderRadius4 (px 9) (px 9) zero zero
+                            ]
+                        ]
+                    , lastChild
+                        [ before
+                            [ height (calc (pct 50) plus (px 9))
+                            , borderRadius4 zero zero (px 9) (px 9)
+                            ]
+                        ]
+                    ]
+                ]
+                [ h3
+                    [ class (highlight event.highlight)
+                    , css
+                        [ gridColumn "2"
+                        , gridRow "2"
+                        , marginBlock zero
+                        , fontSize (rem 1.125)
+                        , withClass "highlight"
+                            [ fontSize (rem 1.875) ]
+                        ]
+                    ]
+                    [ event.label ]
+                , p
+                    [ css
+                        [ gridColumn "2"
+                        , gridRow "3"
+                        , marginBlock zero
+                        , fontSize (rem 0.875)
+                        ]
+                    ]
+                    [ text event.at ]
                 ]
 
         highlight bool =
@@ -192,10 +267,27 @@ scheduleBlock =
             else
                 ""
     in
-    block "Schedule"
-        [ ul [ class "schedule" ] (List.map listItem schedule)
-        , p [ class "note" ] [ text "記載されているスケジュールの一部は予告なく変更されることがございます。" ]
+    ul
+        [ css
+            [ margin zero
+            , padding zero
+            , displayFlex
+            , flexDirection column
+            ]
         ]
+        (List.map listItem events_)
+
+
+note : String -> Html msg
+note description =
+    p
+        [ css
+            [ fontSize (rem 0.875)
+            , color (rgb 64 64 64)
+            , before [ content_ "※" ]
+            ]
+        ]
+        [ text description ]
 
 
 type alias Event msg =
@@ -205,10 +297,10 @@ type alias Event msg =
     }
 
 
-schedule : List (Event msg)
-schedule =
+events : List (Event msg)
+events =
     [ { label =
-            a [ href "https://fortee.jp/2025fp-matsuri/speaker/proposal/cfp", target "_blank" ]
+            a [ href "https://fortee.jp/2025fp-matsuri/speaker/proposal/cfp", Attributes.target "_blank" ]
                 [ text "セッション応募開始" ]
       , at = "2025年1月20日"
       , highlight = False
@@ -228,9 +320,9 @@ schedule =
     ]
 
 
-sponsorsBlock : Html msg
-sponsorsBlock =
-    block "Sponsors"
+sponsorsSection : Html msg
+sponsorsSection =
+    section "Sponsors"
         [ div [ class "markdown sponsors" ]
             [ h3 [ class "text-3xl font-bold text-center py-8" ] [ text "スポンサー募集中！" ]
             , p []
@@ -238,9 +330,9 @@ sponsorsBlock =
                 ]
             , p []
                 [ text "スポンサープランの詳細は "
-                , a [ href "https://docs.google.com/presentation/d/1zMj4lBBr9ru6oAQEUJ01jrzl9hqX1ajs0zdb-73ngto/edit?usp=sharing", target "_blank" ] [ text "スポンサーシップのご案内" ]
+                , a [ href "https://docs.google.com/presentation/d/1zMj4lBBr9ru6oAQEUJ01jrzl9hqX1ajs0zdb-73ngto/edit?usp=sharing", Attributes.target "_blank" ] [ text "スポンサーシップのご案内" ]
                 , text " よりご確認いただけます。スポンサーには"
-                , a [ href "https://scalajp.notion.site/d5f10ec973fb4e779d96330d13b75e78", target "_blank" ] [ text "お申し込みフォーム" ]
+                , a [ href "https://scalajp.notion.site/d5f10ec973fb4e779d96330d13b75e78", Attributes.target "_blank" ] [ text "お申し込みフォーム" ]
                 , text " からお申し込みいただけます。"
                 ]
             , p []
@@ -252,18 +344,18 @@ sponsorsBlock =
         ]
 
 
-teamBlock : Html msg
-teamBlock =
+teamSection : Html msg
+teamSection =
     let
         listItem member =
             li []
-                [ a [ class "person", href ("https://github.com/" ++ member.id), target "_blank" ]
+                [ a [ class "person", href ("https://github.com/" ++ member.id), Attributes.target "_blank" ]
                     [ img [ src ("https://github.com/" ++ member.id ++ ".png") ] []
                     , text member.id
                     ]
                 ]
     in
-    block "Team"
+    section "Team"
         [ div [ class "people leaders" ]
             [ h3 [] [ text "座長" ]
             , ul [] (List.map listItem staff.leader)
@@ -323,10 +415,10 @@ staff =
     }
 
 
-block : String -> List (Html msg) -> Html msg
-block title children =
+section : String -> List (Html msg) -> Html msg
+section title children =
     let
         heading =
             h2 [] [ text title ]
     in
-    section [] (heading :: children)
+    Html.section [] (heading :: children)
