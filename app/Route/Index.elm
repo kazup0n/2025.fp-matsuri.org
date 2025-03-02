@@ -275,6 +275,8 @@ type alias Member =
     { id : String }
 
 
+{-| 公平性のためにアルファベット順で記載しています。
+-}
 staff : { leader : List Member, members : List Member }
 staff =
     { leader =
@@ -287,6 +289,7 @@ staff =
         ]
     , members =
         [ Member "a-skua"
+        , Member "antimon2"
         , Member "aoiroaoino"
         , Member "ChenCMD"
         , Member "Guvalif"
@@ -298,6 +301,7 @@ staff =
         , Member "kazup0n"
         , Member "Keita-N"
         , Member "kmizu"
+        , Member "lmdexpr"
         , Member "magnolia-k"
         , Member "quantumshiro"
         , Member "rabe1028"
