@@ -7,8 +7,8 @@ import BackendTask exposing (BackendTask)
 import Effect exposing (Effect)
 import FatalError exposing (FatalError)
 import Html exposing (Html)
-import Html.Styled exposing (a, footer, h1, header, main_, nav, text)
-import Html.Styled.Attributes exposing (class, href)
+import Html.Styled exposing (a, footer, h1, header, img, main_, nav, text)
+import Html.Styled.Attributes exposing (alt, class, href, src)
 import Pages.Flags
 import Pages.PageUrl exposing (PageUrl)
 import Route exposing (Route)
@@ -92,7 +92,15 @@ view _ _ _ _ pageView =
     { body =
         List.map Html.Styled.toUnstyled
             [ header [ class "site-header" ]
-                [ h1 [] [ a [ href "/" ] [ text "関数型まつり" ] ]
+                [ h1 []
+                    [ a [ href "/" ]
+                        [ img
+                            [ src "images/logotype.svg"
+                            , alt "関数型まつり"
+                            ]
+                            []
+                        ]
+                    ]
                 , nav [] [ a [ href "/code-of-conduct/" ] [ text "行動規範" ] ]
                 ]
             , main_ [] pageView.body
