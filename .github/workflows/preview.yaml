@@ -8,6 +8,9 @@ on:
 jobs:
   Deploy-Preview:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
       - uses: actions/checkout@v4
       - name: Install Vercel CLI
@@ -21,8 +24,9 @@ jobs:
         run: |
           DEPLOY_URL=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
           echo "deploy-url=$DEPLOY_URL" >> ${GITHUB_OUTPUT}
-      - name: Output Deployment URL
+      - name: Comment on Pull Request
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEPLOY_URL: ${{ steps.deploy.outputs.deploy-url }}
         run: |
-          echo "Deployment URL: ${DEPLOY_URL}"
+          gh pr comment ${{ github.event.number }} --body "Preview deployment available at ${DEPLOY_URL}"
