@@ -379,7 +379,6 @@ staff : { leader : List Member, members : List Member }
 staff =
     { leader =
         [ Member "lagenorhynque"
-        , Member "omiend"
         , Member "shomatan"
         , Member "taketora26"
         , Member "yoshihiro503"
@@ -413,6 +412,7 @@ staff =
         , Member "y047aka"
         , Member "yonta"
         , Member "yshnb"
+        , Member "omiend"
         ]
     }
 
