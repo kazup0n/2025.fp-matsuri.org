@@ -2,14 +2,14 @@ module Route.Index exposing (ActionData, Data, Model, Msg, route)
 
 import BackendTask exposing (BackendTask)
 import Css exposing (..)
-import Css.Extra exposing (columnGap, content_, grid, gridColumn, gridRow, marginBlock, rowGap)
+import Css.Extra exposing (columnGap, content_, fr, grid, gridColumn, gridRow, gridTemplateColumns, marginBlock, rowGap)
 import Css.Global exposing (withClass)
 import Css.Media as Media exposing (only, screen, withMedia)
 import FatalError exposing (FatalError)
 import Head
 import Head.Seo
 import Html.Styled as Html exposing (Html, a, br, div, h1, h2, h3, iframe, img, li, p, section, span, text, ul)
-import Html.Styled.Attributes as Attributes exposing (attribute, class, css, href, src, style)
+import Html.Styled.Attributes as Attributes exposing (alt, attribute, class, css, href, src, style)
 import PagesMsg exposing (PagesMsg)
 import RouteBuilder exposing (App, StatelessRoute)
 import Shared
@@ -241,6 +241,142 @@ sponsorsSection =
                 , text "よりお気軽にお問い合わせください。"
                 ]
             ]
+        , sponsorLogos
+        ]
+
+
+
+-- 各種スポンサーデータ
+
+
+type alias Sponsor =
+    { name : String
+    , image : String
+    , href : String
+    }
+
+
+goldSponsors : List Sponsor
+goldSponsors =
+    [ Sponsor "株式会社kubell（旧Chatwork株式会社）" "kubell.png" "https://www.kubell.com/recruit/engineer/"
+    ]
+
+
+silverSponsors : List Sponsor
+silverSponsors =
+    [ Sponsor "株式会社はてな" "hatena.png" "https://hatena.co.jp"
+    , Sponsor "合同会社ザウエル" "zauel.png" "https://zauel.co.jp"
+    ]
+
+
+logoSponsors : List Sponsor
+logoSponsors =
+    [ Sponsor "合同会社Ignission" "ignission.png" "https://ignission.tech/"
+    , Sponsor "株式会社ギークニア" "geekneer.png" "https://geekneer.com/"
+    ]
+
+
+sponsorLogos : Html msg
+sponsorLogos =
+    let
+        -- スポンサープランによらない、レイアウト構成を決めるようなスタイルを定義
+        logoGridStyle =
+            batch
+                [ display grid
+                , columnGap (px 10)
+                , paddingTop (px 20)
+                , justifyContent center
+                , withMedia [ only screen [ Media.minWidth (px 640) ] ]
+                    [ paddingTop (px 30)
+                    ]
+                ]
+    in
+    div [ css [ width (pct 100) ] ]
+        [ sponsorPlanHeader "ゴールドスポンサー"
+        , div
+            [ css
+                [ logoGridStyle
+                , paddingBottom (px 40)
+                , gridTemplateColumns [ fr 1 ]
+                , withMedia [ only screen [ Media.minWidth (px 640) ] ]
+                    [ gridTemplateColumns [ px 280 ] ]
+                ]
+            ]
+            (List.map sponsorLogo goldSponsors)
+        , sponsorPlanHeader "シルバースポンサー"
+        , div
+            [ css
+                [ logoGridStyle
+                , paddingBottom (px 40)
+                , gridTemplateColumns [ fr 1, fr 1, fr 1 ]
+                , withMedia [ only screen [ Media.minWidth (px 640) ] ]
+                    [ gridTemplateColumns [ px 163, px 163 ] ]
+                ]
+            ]
+            (List.map sponsorLogo silverSponsors)
+        , sponsorPlanHeader "ロゴスポンサー"
+        , div
+            [ css
+                [ logoGridStyle
+                , paddingBottom (px 40)
+                , gridTemplateColumns [ fr 1, fr 1, fr 1, fr 1 ]
+                , withMedia [ only screen [ Media.minWidth (px 640) ] ]
+                    [ gridTemplateColumns [ px 116, px 116 ] ]
+                ]
+            ]
+            (List.map sponsorLogo logoSponsors)
+        ]
+
+
+sponsorLogo : Sponsor -> Html msg
+sponsorLogo s =
+    a
+        [ href s.href
+        , Attributes.rel "noopener noreferrer"
+        , Attributes.target "_blank"
+        , css
+            [ textAlign center
+            , textDecoration none
+            , color inherit
+            , fontSize (pt 10)
+            , withMedia [ only screen [ Media.minWidth (px 640) ] ]
+                [ fontSize (pt 12) ]
+            ]
+        ]
+        [ img
+            [ src ("images/sponsors/" ++ s.image)
+            , css
+                [ backgroundColor (rgb 255 255 255)
+                , borderRadius (px 10)
+                , width (pct 100)
+                ]
+            , alt s.name
+            ]
+            []
+        ]
+
+
+sponsorPlanHeader : String -> Html msg
+sponsorPlanHeader name =
+    div
+        [ css
+            [ display grid
+            , property "grid-template-columns " "1fr max-content 1fr"
+            , alignItems center
+            , columnGap (px 5)
+            ]
+        ]
+        [ div [ css [ backgroundColor (rgba 30 44 88 0.1), height (px 1) ] ] []
+        , div
+            [ css
+                [ color (rgb 0x66 0x66 0x66)
+                , fontWeight bold
+                , withMedia [ only screen [ Media.minWidth (px 640) ] ]
+                    [ fontSize (pt 16) ]
+                ]
+            ]
+            [ text name ]
+        , div [ css [ backgroundColor (rgba 30 44 88 0.1), height (px 1) ] ] []
         ]
 
 
