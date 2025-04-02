@@ -8,8 +8,8 @@ import Css.Media as Media exposing (only, screen, withMedia)
 import FatalError exposing (FatalError)
 import Head
 import Head.Seo
-import Html.Styled as Html exposing (Html, a, br, div, h1, h2, h3, iframe, img, li, p, section, span, text, ul)
-import Html.Styled.Attributes as Attributes exposing (alt, attribute, class, css, href, src, style)
+import Html.Styled as Html exposing (Html, a, div, h1, h2, h3, iframe, img, li, p, section, span, text, ul)
+import Html.Styled.Attributes as Attributes exposing (alt, attribute, class, css, href, rel, src, style)
 import PagesMsg exposing (PagesMsg)
 import RouteBuilder exposing (App, StatelessRoute)
 import Shared
@@ -92,15 +92,10 @@ hero =
         announcement =
             div [ class "announcement" ]
                 [ div [ style "text-align" "center", style "word-break" "auto-phrase" ]
-                    [ text "セッション募集は終了しました。"
-                    , br [] []
-                    , text "選考が完了するまでしばらくお待ちください。"
-                    , br [] []
-                    , text "ご応募ありがとうございました。"
-                    ]
+                    [ text "セッション採択結果を公開しました。" ]
                 , div [ class "buttons" ]
                     [ a [ class "button", href "https://fortee.jp/2025fp-matsuri/proposal/all", Attributes.target "_blank" ]
-                        [ text "応募中のセッション一覧を見る" ]
+                        [ text "セッション一覧を見る" ]
                     ]
                 ]
 
@@ -139,7 +134,7 @@ links =
 newsSection : Html msg
 newsSection =
     let
-        newsItem date content =
+        newsItem date contents =
             div
                 -- PCの時だけ二段組にします。モバイルの時は一段組ですが日付と内容の間にgapが付きません。
                 [ css
@@ -151,7 +146,7 @@ newsSection =
                         ]
                     ]
                 ]
-                [ div [] [ text date ], div [] [ text content ] ]
+                [ div [] [ text date ], div [] contents ]
     in
     section "News"
         [ div
@@ -166,8 +161,12 @@ newsSection =
                     ]
                 ]
             ]
-            [ newsItem "2025-03-02" "公募セッションの応募を締め切りました"
-            , newsItem "2025-01-20" "公募セッションの応募を開始しました"
+            [ newsItem "2025-03-30"
+                [ a [ href "https://fortee.jp/2025fp-matsuri/proposal/all", Attributes.target "_blank", rel "noopener noreferrer" ]
+                    [ text "セッション採択結果を公開しました" ]
+                ]
+            , newsItem "2025-03-02" [ text "公募セッションの応募を締め切りました" ]
+            , newsItem "2025-01-20" [ text "公募セッションの応募を開始しました" ]
             ]
         ]
 
@@ -506,7 +505,7 @@ events =
       , highlight = False
       }
     , { label = text "セッション採択結果発表"
-      , at = "2025年3月中"
+      , at = "2025年3月30日"
       , highlight = False
       }
     , { label = text "チケット販売開始"
@@ -514,7 +513,7 @@ events =
       , highlight = False
       }
     , { label = text "関数型まつり開催"
-      , at = "2025.6.14-15"
+      , at = "2025年6月14-15日"
       , highlight = True
       }
     ]
