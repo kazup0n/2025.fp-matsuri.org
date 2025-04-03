@@ -223,7 +223,7 @@ sponsorsSection : Html msg
 sponsorsSection =
     section "Sponsors"
         [ div [ class "markdown sponsors" ]
-            [ h3 [ class "text-3xl font-bold text-center py-8" ] [ text "スポンサー募集中！" ]
+            [ h3 [] [ text "スポンサー募集中！" ]
             , p []
                 [ text "関数型まつりの開催には、みなさまのサポートが必要です！現在、イベントを支援していただけるスポンサー企業を募集しています。関数型プログラミングのコミュニティを一緒に盛り上げていきたいという企業のみなさま、ぜひご検討ください。"
                 ]
@@ -290,7 +290,7 @@ sponsorLogos =
                     ]
                 ]
     in
-    div [ css [ width (pct 100) ] ]
+    div [ css [ width (pct 100), maxWidth (em 40) ] ]
         [ sponsorPlanHeader "ゴールドスポンサー"
         , div
             [ css
@@ -333,14 +333,6 @@ sponsorLogo s =
         [ href s.href
         , Attributes.rel "noopener noreferrer"
         , Attributes.target "_blank"
-        , css
-            [ textAlign center
-            , textDecoration none
-            , color inherit
-            , fontSize (pt 10)
-            , withMedia [ only screen [ Media.minWidth (px 640) ] ]
-                [ fontSize (pt 12) ]
-            ]
         ]
         [ img
             [ src ("images/sponsors/" ++ s.image)
@@ -362,16 +354,16 @@ sponsorPlanHeader name =
             [ display grid
             , property "grid-template-columns " "1fr max-content 1fr"
             , alignItems center
-            , columnGap (px 5)
+            , columnGap (em 0.5)
             ]
         ]
         [ div [ css [ backgroundColor (rgba 30 44 88 0.1), height (px 1) ] ] []
         , div
             [ css
                 [ color (rgb 0x66 0x66 0x66)
-                , fontWeight bold
+                , whiteSpace noWrap
                 , withMedia [ only screen [ Media.minWidth (px 640) ] ]
-                    [ fontSize (pt 16) ]
+                    [ fontSize (px 16) ]
                 ]
             ]
             [ text name ]
