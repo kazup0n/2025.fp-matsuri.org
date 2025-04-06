@@ -3,12 +3,12 @@ module Route.Index exposing (ActionData, Data, Model, Msg, route)
 import BackendTask exposing (BackendTask)
 import Css exposing (..)
 import Css.Extra exposing (columnGap, content_, fr, grid, gridColumn, gridRow, gridTemplateColumns, marginBlock, rowGap)
-import Css.Global exposing (withClass)
+import Css.Global exposing (descendants, withClass)
 import Css.Media as Media exposing (only, screen, withMedia)
 import FatalError exposing (FatalError)
 import Head
 import Head.Seo
-import Html.Styled as Html exposing (Html, a, div, h1, h2, h3, iframe, img, li, p, section, span, text, ul)
+import Html.Styled as Html exposing (Html, a, div, h1, h2, h3, iframe, img, li, p, section, span, tbody, td, text, th, thead, tr, ul)
 import Html.Styled.Attributes as Attributes exposing (alt, attribute, class, css, href, rel, src, style)
 import PagesMsg exposing (PagesMsg)
 import RouteBuilder exposing (App, StatelessRoute)
@@ -192,30 +192,72 @@ aboutSection =
 overviewSection : Html msg
 overviewSection =
     let
-        item key value =
+        itemHeader key contents =
             div [ style "min-width" "18rem" ]
-                [ h3 [ class "font-semibold" ] [ text key ]
-                , p [] [ text value ]
+                (h3 [ class "font-semibold" ] [ text key ]
+                    :: contents
+                )
+
+        item key value =
+            itemHeader key [ p [] [ text value ] ]
+
+        information =
+            div [ class "overview" ]
+                [ itemHeader "日程"
+                    [ ul []
+                        [ li [] [ text "Day1：6月14日（土）11:00〜19:00" ]
+                        , li [] [ text "Day2：6月15日（日）10:00〜19:00" ]
+                        ]
+                    ]
+                , item "会場"
+                    "中野セントラルパーク カンファレンス"
+                , itemHeader "チケット"
+                    [ div []
+                        [ Html.table [ css [ width (pct 100) ] ]
+                            [ tbody [ css [ descendants [ Css.Global.th [ textAlign left, fontWeight normal ] ] ] ]
+                                [ tr []
+                                    [ th [] [ text "一般（懇親会あり）" ]
+                                    , td [] [ text "3,000円" ]
+                                    ]
+                                , tr []
+                                    [ th [] [ text "一般（懇親会なし）" ]
+                                    , td [] [ text "8,000円" ]
+                                    ]
+                                , tr []
+                                    [ th [] [ text "学生（懇親会あり）" ]
+                                    , td [] [ text "1,000円" ]
+                                    ]
+                                , tr []
+                                    [ th [] [ text "学生（懇親会なし）" ]
+                                    , td [] [ text "6,000円" ]
+                                    ]
+                                , tr []
+                                    [ th [] [ text "懇親会のみ" ]
+                                    , td [] [ text "5,000円" ]
+                                    ]
+                                ]
+                            ]
+                        , text "※ Day 1のセッション終了後には、参加者同士の交流を深める懇親会を予定しております。参加される方は「懇親会あり」のチケットをご購入ください。"
+                        , a [ href "https://fp-matsuri.doorkeeper.jp/events/182879", Attributes.target "_blank" ] [ p [ class "link-to-doorkeeper" ] [ text "チケット販売サイト（Doorkeeper）" ] ]
+                        ]
+                    ]
                 ]
+
+        map =
+            iframe
+                [ class "map"
+                , src "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d25918.24822641297!2d139.64379899847268!3d35.707005772578796!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6018f34668e0bc27%3A0x7d66caba722762c5!2z5Lit6YeO44K744Oz44OI44Op44Or44OR44O844Kv44Kr44Oz44OV44Kh44Os44Oz44K5!5e0!3m2!1sen!2sjp!4v1736684092765!5m2!1sen!2sjp"
+                , attribute "width" "100%"
+                , Attributes.height 400
+                , style "border" "0"
+                , attribute "allowfullscreen" ""
+                , attribute "loading" "lazy"
+                , attribute "referrerpolicy" "no-referrer-when-downgrade"
+                ]
+                []
     in
     section "Overview"
-        [ div [ class "markdown overview" ]
-            [ item "Dates"
-                "2025.6.14(土)〜15(日)"
-            , item "Place"
-                "中野セントラルパーク カンファレンス"
-            ]
-        , iframe
-            [ class "map"
-            , src "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d25918.24822641297!2d139.64379899847268!3d35.707005772578796!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6018f34668e0bc27%3A0x7d66caba722762c5!2z5Lit6YeO44K744Oz44OI44Op44Or44OR44O844Kv44Kr44Oz44OV44Kh44Os44Oz44K5!5e0!3m2!1sen!2sjp!4v1736684092765!5m2!1sen!2sjp"
-            , attribute "width" "100%"
-            , Attributes.height 400
-            , style "border" "0"
-            , attribute "allowfullscreen" ""
-            , attribute "loading" "lazy"
-            , attribute "referrerpolicy" "no-referrer-when-downgrade"
-            ]
-            []
+        [ div [ class "overview-box" ] [ information, map ]
         ]
 
 
