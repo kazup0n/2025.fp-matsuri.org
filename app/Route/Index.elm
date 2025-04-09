@@ -9,7 +9,7 @@ import Effect exposing (Effect)
 import FatalError exposing (FatalError)
 import Head
 import Head.Seo
-import Html.Styled as Html exposing (Html, a, div, h1, h2, h3, iframe, img, li, p, section, span, tbody, td, text, th, tr, ul)
+import Html.Styled as Html exposing (Html, a, div, h1, h2, h3, iframe, img, li, p, section, span, tbody, td, text, th, thead, tr, ul)
 import Html.Styled.Attributes as Attributes exposing (alt, attribute, class, css, href, rel, src, style)
 import PagesMsg exposing (PagesMsg)
 import Random
@@ -246,72 +246,203 @@ aboutSection =
 overviewSection : Html msg
 overviewSection =
     let
-        itemHeader key contents =
-            div [ style "min-width" "18rem" ]
-                (h3 [ class "font-semibold" ] [ text key ]
-                    :: contents
-                )
-
-        item key value =
-            itemHeader key [ p [] [ text value ] ]
-
         information =
-            div [ class "overview" ]
-                [ itemHeader "日程"
-                    [ ul []
+            div []
+                [ item "日程"
+                    [ ul [ css [ padding zero, textAlign center, listStyle none ] ]
                         [ li [] [ text "Day1：6月14日（土）11:00〜19:00" ]
                         , li [] [ text "Day2：6月15日（日）10:00〜19:00" ]
                         ]
                     ]
                 , item "会場"
-                    "中野セントラルパーク カンファレンス"
-                , itemHeader "チケット"
-                    [ div []
-                        [ Html.table [ css [ width (pct 100) ] ]
-                            [ tbody [ css [ descendants [ Css.Global.th [ textAlign left, fontWeight normal ] ] ] ]
-                                [ tr []
-                                    [ th [] [ text "一般（懇親会なし）" ]
-                                    , td [] [ text "3,000円" ]
-                                    ]
-                                , tr []
-                                    [ th [] [ text "一般（懇親会あり）" ]
-                                    , td [] [ text "8,000円" ]
-                                    ]
-                                , tr []
-                                    [ th [] [ text "学生（懇親会なし）" ]
-                                    , td [] [ text "1,000円" ]
-                                    ]
-                                , tr []
-                                    [ th [] [ text "学生（懇親会あり）" ]
-                                    , td [] [ text "6,000円" ]
-                                    ]
-                                , tr []
-                                    [ th [] [ text "懇親会のみ" ]
-                                    , td [] [ text "5,000円" ]
-                                    ]
-                                ]
-                            ]
-                        , text "※ Day 1のセッション終了後には、参加者同士の交流を深める懇親会を予定しております。参加される方は「懇親会あり」のチケットをご購入ください。"
-                        , a [ href "https://fp-matsuri.doorkeeper.jp/events/182879", Attributes.target "_blank" ] [ p [ class "link-to-doorkeeper" ] [ text "チケット販売サイト（Doorkeeper）" ] ]
+                    [ p [ css [ textAlign center ] ] [ text "中野セントラルパーク カンファレンス" ] ]
+                , item "チケット"
+                    [ ticketTable
+                        [ ConferenceTicket { category = "一般（懇親会なし）", price = "3,000円" }
+                        , BothTicket { category = "一般（懇親会あり）", price = "8,000円" }
+                        , ConferenceTicket { category = "学生（懇親会なし）", price = "1,000円" }
+                        , BothTicket { category = "学生（懇親会あり）", price = "6,000円" }
+                        , PartyTicket { category = "懇親会のみ", price = "5,000円" }
                         ]
+                    , note "Day 1のセッション終了後には、参加者同士の交流を深める懇親会を予定しております。参加される方は「懇親会あり」のチケットをご購入ください。"
+                    , buttonLink
+                        { label = "チケットを購入（Doorkeeper）"
+                        , url = "https://fp-matsuri.doorkeeper.jp/events/182879"
+                        }
                     ]
                 ]
 
+        item label contents =
+            div []
+                (h3
+                    [ css
+                        [ margin zero
+                        , display grid
+                        , property "grid-template-columns " "1fr max-content 1fr"
+                        , alignItems center
+                        , columnGap (em 0.5)
+                        ]
+                    ]
+                    [ div [ css [ backgroundColor (rgba 30 44 88 0.1), height (px 1) ] ] []
+                    , div
+                        [ css
+                            [ color (rgb 0x66 0x66 0x66)
+                            , whiteSpace noWrap
+                            , fontSize (px 16)
+                            , fontWeight normal
+                            ]
+                        ]
+                        [ text label ]
+                    , div [ css [ backgroundColor (rgba 30 44 88 0.1), height (px 1) ] ] []
+                    ]
+                    :: contents
+                )
+
+        note string =
+            p
+                [ css
+                    [ display grid
+                    , property "grid-template-columns" "auto 1fr"
+                    , columnGap (em 0.3)
+                    , fontSize (px 14)
+                    , before
+                        [ display block
+                        , property "content" (qt "※")
+                        , lineHeight (num 1.5)
+                        ]
+                    ]
+                ]
+                [ text string ]
+
+        buttonLink { label, url } =
+            a
+                [ href url
+                , Attributes.target "_blank"
+                , rel "noopener noreferrer"
+                , css
+                    [ display block
+                    , padding (px 8)
+                    , textAlign center
+                    , textDecoration none
+                    , fontSize (px 16)
+                    , borderRadius (px 30)
+                    , backgroundColor (rgba 210 96 88 1)
+                    , color (rgb 255 255 255)
+                    ]
+                ]
+                [ text label ]
+
         map =
             iframe
-                [ class "map"
-                , src "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d25918.24822641297!2d139.64379899847268!3d35.707005772578796!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6018f34668e0bc27%3A0x7d66caba722762c5!2z5Lit6YeO44K744Oz44OI44Op44Or44OR44O844Kv44Kr44Oz44OV44Kh44Os44Oz44K5!5e0!3m2!1sen!2sjp!4v1736684092765!5m2!1sen!2sjp"
-                , attribute "width" "100%"
-                , Attributes.height 400
-                , style "border" "0"
+                [ src "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d25918.24822641297!2d139.64379899847268!3d35.707005772578796!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6018f34668e0bc27%3A0x7d66caba722762c5!2z5Lit6YeO44K744Oz44OI44Op44Or44OR44O844Kv44Kr44Oz44OV44Kh44Os44Oz44K5!5e0!3m2!1sen!2sjp!4v1736684092765!5m2!1sen!2sjp"
                 , attribute "allowfullscreen" ""
                 , attribute "loading" "lazy"
                 , attribute "referrerpolicy" "no-referrer-when-downgrade"
+                , css
+                    [ width (pct 100)
+                    , height (px 400)
+                    , borderRadius (px 5)
+                    , border zero
+                    , withMedia [ only screen [ Media.minWidth (px 640) ] ]
+                        [ height (pct 100) ]
+                    ]
                 ]
                 []
     in
     section "Overview"
-        [ div [ class "overview-box" ] [ information, map ]
+        [ div
+            [ css
+                [ display grid
+                , rowGap (em 1)
+                , withMedia [ only screen [ Media.minWidth (px 640) ] ]
+                    [ maxWidth (px 800)
+                    , gridTemplateColumns [ fr 1, fr 1 ]
+                    , columnGap (em 2)
+                    ]
+                ]
+            ]
+            [ information, map ]
+        ]
+
+
+type Ticket
+    = ConferenceTicket { category : String, price : String }
+    | PartyTicket { category : String, price : String }
+    | BothTicket { category : String, price : String }
+
+
+ticketTable : List Ticket -> Html msg
+ticketTable tickets =
+    Html.table
+        [ css
+            [ margin2 (em 1) zero
+            , width (pct 100)
+            , borderCollapse collapse
+            , borderSpacing zero
+            ]
+        ]
+        [ thead []
+            [ tr
+                [ css
+                    [ descendants
+                        [ Css.Global.th
+                            [ paddingBottom (px 5), fontSize (px 12) ]
+                        ]
+                    ]
+                ]
+                [ th [ css [ textAlign left ] ] [ text "種別" ]
+                , th [ css [ textAlign center ] ] [ text "価格" ]
+                , th [ css [ textAlign center ] ] [ text "カンファレンス" ]
+                , th [ css [ textAlign center ] ] [ text "懇親会" ]
+                ]
+            ]
+        , tbody [] (List.map tableRow tickets)
+        ]
+
+
+tableRow : Ticket -> Html msg
+tableRow ticket =
+    let
+        { category, price } =
+            case ticket of
+                ConferenceTicket options ->
+                    options
+
+                PartyTicket options ->
+                    options
+
+                BothTicket options ->
+                    options
+    in
+    tr []
+        [ td [ css [ textAlign left, fontSize (px 14) ] ] [ text category ]
+        , td [ css [ textAlign center, fontSize (px 14) ] ] [ text price ]
+        , td [ css [ textAlign center, fontSize (px 24) ] ]
+            [ text
+                (case ticket of
+                    ConferenceTicket _ ->
+                        "○"
+
+                    PartyTicket _ ->
+                        "-"
+
+                    BothTicket _ ->
+                        "○"
+                )
+            ]
+        , td [ css [ textAlign center, fontSize (px 24) ] ]
+            [ text
+                (case ticket of
+                    ConferenceTicket _ ->
+                        "-"
+
+                    PartyTicket _ ->
+                        "○"
+
+                    BothTicket _ ->
+                        "○"
+                )
+            ]
         ]
 
 
