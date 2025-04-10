@@ -3,14 +3,14 @@ module Route.Index exposing (ActionData, Data, Model, Msg, route)
 import BackendTask exposing (BackendTask)
 import Css exposing (..)
 import Css.Extra exposing (columnGap, fr, grid, gridColumn, gridTemplateColumns, rowGap)
-import Css.Global exposing (descendants)
+import Css.Global exposing (descendants, withClass)
 import Css.Media as Media exposing (only, screen, withMedia)
 import Effect exposing (Effect)
 import FatalError exposing (FatalError)
 import Head
 import Head.Seo
 import Html.Styled as Html exposing (Html, a, div, h1, h2, h3, iframe, img, li, p, section, span, tbody, td, text, th, thead, tr, ul)
-import Html.Styled.Attributes as Attributes exposing (alt, attribute, class, css, href, rel, src, style)
+import Html.Styled.Attributes as Attributes exposing (alt, attribute, class, css, href, rel, src)
 import PagesMsg exposing (PagesMsg)
 import Random
 import RouteBuilder exposing (App, StatefulRoute)
@@ -102,7 +102,7 @@ view :
 view _ _ model =
     { title = ""
     , body =
-        [ hero
+        [ hero model.seed
         , newsSection
         , aboutSection
         , overviewSection
@@ -112,51 +112,164 @@ view _ _ model =
     }
 
 
-hero : Html msg
-hero =
-    let
-        date =
-            div [ class "date" ]
-                [ text "2025.6.14"
-                , span [ style "font-size" "70%" ] [ text " sat" ]
-                , text " – 15"
-                , span [ style "font-size" "70%" ] [ text " sun" ]
+hero : Int -> Html msg
+hero seed =
+    div [ css [ padding3 zero (px 10) (px 10) ] ]
+        [ div
+            [ css
+                [ padding3 (px 80) (px 20) (px 20)
+                , display grid
+                , property "justify-items" "center"
+                , rowGap (rem 2.5)
+                , borderRadius (px 10)
+                , property "background-color" "var(--color-grey095)"
+                , property "color" "var(--color-primary)"
                 ]
-
-        iconButton item =
-            a [ class "icon-button", href item.href ]
-                [ img [ class item.id, src item.icon ] [] ]
-    in
-    div [ class "hero" ]
-        [ div [ class "hero-main" ]
-            [ img [ class "logomark", src "images/logomark.svg" ] []
-            , h1 [] [ text "関数型まつり" ]
-            , date
             ]
-        , ul [ class "links" ] (List.map (\link -> li [] [ iconButton link ]) links)
+            [ logoAndDate
+            , heroSponsorsBlock (platinumSponsorsShuffled seed)
+            , socialLinkList
+                [ { id = "x"
+                  , icon = "images/x.svg"
+                  , href = "https://x.com/fp_matsuri"
+                  }
+                , { id = "hatena_blog"
+                  , icon = "images/hatenablog.svg"
+                  , href = "https://blog.fp-matsuri.org/"
+                  }
+                , { id = "fortee"
+                  , icon = "images/fortee.svg"
+                  , href = "https://fortee.jp/2025fp-matsuri"
+                  }
+                ]
+            ]
         ]
 
 
-links : List { id : String, icon : String, href : String }
-links =
-    [ { id = "x"
-      , icon = "images/x.svg"
-      , href = "https://x.com/fp_matsuri"
-      }
-    , { id = "hatena_blog"
-      , icon = "images/hatenablog.svg"
-      , href = "https://blog.fp-matsuri.org/"
-      }
-    , { id = "fortee"
-      , icon = "images/fortee.svg"
-      , href = "https://fortee.jp/2025fp-matsuri"
-      }
-    ]
+logoAndDate : Html msg
+logoAndDate =
+    let
+        -- TODO：ロゴイメージとロゴタイプ1枚の画像にする
+        logo =
+            [ img [ src "images/logomark.svg", css [ height (pct 100) ] ] []
+            , h1
+                [ css
+                    [ margin zero
+                    , lineHeight (num 1)
+                    , property "font-family" "var(--serif-logo)"
+                    , fontSize (rem 2.2)
+                    , fontWeight inherit
+                    , withMedia [ only screen [ Media.minWidth (px 640) ] ]
+                        [ fontSize (rem 3.25) ]
+                    ]
+                ]
+                [ text "関数型まつり" ]
+            ]
+
+        date =
+            div
+                [ css
+                    [ property "font-family" "var(--montserrat-sans)"
+                    , fontSize (rem 1)
+                    , fontWeight (int 300)
+                    , withMedia [ only screen [ Media.minWidth (px 640) ] ]
+                        [ fontSize (rem 1.5) ]
+                    ]
+                ]
+                [ text "2025.6.14"
+                , span [ css [ fontSize (pct 70) ] ] [ text " sat" ]
+                , text " – 15"
+                , span [ css [ fontSize (pct 70) ] ] [ text " sun" ]
+                ]
+    in
+    div
+        [ css
+            [ width (pct 100)
+            , property "display" "grid"
+            , property "grid-template-rows" "6rem auto auto"
+            , property "place-items" "center"
+            , rowGap (rem 1.2)
+            , withMedia [ only screen [ Media.minWidth (px 640) ] ]
+                [ property "grid-template-rows" "9rem auto auto" ]
+            ]
+        ]
+        (logo ++ [ date ])
+
+
+heroSponsorsBlock : List { name : String, image : String, href : String } -> Html msg
+heroSponsorsBlock sponsors =
+    let
+        platinumSponsorLogo sponsor =
+            a
+                [ href sponsor.href
+                , Attributes.rel "noopener noreferrer"
+                , Attributes.target "_blank"
+                , css
+                    [ display block
+                    , width (px 200)
+                    , withMedia [ only screen [ Media.minWidth (px 640) ] ]
+                        [ width (px 250) ]
+                    ]
+                ]
+                [ img
+                    [ src ("images/sponsors/" ++ sponsor.image)
+                    , css
+                        [ backgroundColor (rgb 255 255 255)
+                        , borderRadius (px 10)
+                        , width (pct 100)
+                        ]
+                    , alt sponsor.name
+                    ]
+                    []
+                ]
+    in
+    div [] (List.map platinumSponsorLogo sponsors)
+
+
+socialLinkList : List { id : String, icon : String, href : String } -> Html msg
+socialLinkList links_ =
+    let
+        iconButton item =
+            a
+                [ href item.href
+                , css
+                    [ width (px 44)
+                    , height (px 44)
+                    , displayFlex
+                    , alignItems center
+                    , justifyContent center
+                    , borderRadius (pct 100)
+                    , backgroundColor (rgba 255 255 255 1)
+                    ]
+                ]
+                [ img
+                    [ class item.id
+                    , src item.icon
+                    , css
+                        [ withClass "x" [ width (pct 50), height (pct 50) ]
+                        , withClass "fortee" [ width (pct 50), height (pct 50) ]
+                        , withClass "hatena_blog" [ width (pct 100), height (pct 100) ]
+                        ]
+                    ]
+                    []
+                ]
+    in
+    ul
+        [ css
+            [ width (pct 100)
+            , margin zero
+            , padding zero
+            , displayFlex
+            , justifyContent flexEnd
+            , columnGap (rem 0.75)
+            ]
+        ]
+        (List.map (\link -> li [ css [ listStyle none ] ] [ iconButton link ]) links_)
 
 
 newsSection : Html msg
 newsSection =
-    section "News"
+    section ""
         [ news
             [ { date = "2025-04-06"
               , label = "🎉 注目のプログラムがついに公開！そしてチケット販売開始しました！！"
@@ -482,11 +595,16 @@ type alias Sponsor =
     }
 
 
+platinumSponsorsShuffled : Int -> List Sponsor
+platinumSponsorsShuffled seed =
+    shuffleList seed
+        [ Sponsor "株式会社スリーシェイク" "3-shake.png" "https://3-shake.com/" ]
+
+
 goldSponsorsShuffled : Int -> List Sponsor
 goldSponsorsShuffled seed =
     shuffleList seed
-        [ Sponsor "株式会社kubell（旧Chatwork株式会社）" "kubell.png" "https://www.kubell.com/recruit/engineer/"
-        ]
+        [ Sponsor "株式会社kubell（旧Chatwork株式会社）" "kubell.png" "https://www.kubell.com/recruit/engineer/" ]
 
 
 silverSponsorsShuffled : Int -> List Sponsor
@@ -504,6 +622,7 @@ logoSponsorsShuffled seed =
     shuffleList seed
         [ Sponsor "合同会社Ignission" "ignission.png" "https://ignission.tech/"
         , Sponsor "株式会社ギークニア" "geekneer.png" "https://geekneer.com/"
+        , Sponsor "Siiibo証券株式会社" "siiibo.png" "https://siiibo.com/"
         ]
 
 
@@ -535,6 +654,7 @@ sponsorLogos seed =
         logoGridStyle =
             batch
                 [ display grid
+                , rowGap (px 10)
                 , columnGap (px 10)
                 , paddingTop (px 20)
                 , justifyContent center
@@ -544,14 +664,25 @@ sponsorLogos seed =
                 ]
     in
     div [ css [ width (pct 100), maxWidth (em 43) ] ]
-        [ sponsorPlanHeader "ゴールドスポンサー"
+        [ sponsorPlanHeader "プラチナスポンサー"
         , div
             [ css
                 [ logoGridStyle
                 , paddingBottom (px 40)
                 , gridTemplateColumns [ fr 1 ]
                 , withMedia [ only screen [ Media.minWidth (px 640) ] ]
-                    [ gridTemplateColumns [ px 280 ] ]
+                    [ gridTemplateColumns [ px 326 ] ]
+                ]
+            ]
+            (List.map sponsorLogo (platinumSponsorsShuffled seed))
+        , sponsorPlanHeader "ゴールドスポンサー"
+        , div
+            [ css
+                [ logoGridStyle
+                , paddingBottom (px 40)
+                , gridTemplateColumns [ fr 1, fr 1 ]
+                , withMedia [ only screen [ Media.minWidth (px 640) ] ]
+                    [ gridTemplateColumns [ px 257 ] ]
                 ]
             ]
             (List.map sponsorLogo (goldSponsorsShuffled seed))
@@ -573,7 +704,7 @@ sponsorLogos seed =
                 , paddingBottom (px 40)
                 , gridTemplateColumns [ fr 1, fr 1, fr 1, fr 1 ]
                 , withMedia [ only screen [ Media.minWidth (px 640) ] ]
-                    [ gridTemplateColumns [ px 116, px 116 ] ]
+                    [ property "grid-template-columns" "repeat(auto-fit, 116px)" ]
                 ]
             ]
             (List.map sponsorLogo (logoSponsorsShuffled seed))
@@ -699,6 +830,10 @@ section : String -> List (Html msg) -> Html msg
 section title children =
     let
         heading =
-            h2 [] [ text title ]
+            if title == "" then
+                text ""
+
+            else
+                h2 [] [ text title ]
     in
     Html.section [] (heading :: children)
