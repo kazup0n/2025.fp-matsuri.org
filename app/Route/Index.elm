@@ -9,7 +9,7 @@ import Effect exposing (Effect)
 import FatalError exposing (FatalError)
 import Head
 import Head.Seo
-import Html.Styled as Html exposing (Html, a, div, h1, h2, h3, iframe, img, li, p, section, span, tbody, td, text, th, thead, tr, ul)
+import Html.Styled as Html exposing (Attribute, Html, a, div, h1, h2, iframe, img, li, p, section, span, tbody, td, text, th, thead, tr, ul)
 import Html.Styled.Attributes as Attributes exposing (alt, attribute, class, css, href, rel, src)
 import PagesMsg exposing (PagesMsg)
 import Random
@@ -386,30 +386,7 @@ overviewSection =
                 ]
 
         item label contents =
-            div []
-                (h3
-                    [ css
-                        [ margin zero
-                        , display grid
-                        , property "grid-template-columns " "1fr max-content 1fr"
-                        , alignItems center
-                        , columnGap (em 0.5)
-                        ]
-                    ]
-                    [ div [ css [ backgroundColor (rgba 30 44 88 0.1), height (px 1) ] ] []
-                    , div
-                        [ css
-                            [ color (rgb 0x66 0x66 0x66)
-                            , whiteSpace noWrap
-                            , fontSize (px 16)
-                            , fontWeight normal
-                            ]
-                        ]
-                        [ text label ]
-                    , div [ css [ backgroundColor (rgba 30 44 88 0.1), height (px 1) ] ] []
-                    ]
-                    :: contents
-                )
+            div [] (h3 [] [ text label ] :: contents)
 
         note string =
             p
@@ -563,7 +540,7 @@ sponsorsSection : Int -> Html msg
 sponsorsSection seed =
     section "Sponsors"
         [ div [ class "markdown sponsors" ]
-            [ h3 [] [ text "スポンサー募集中！" ]
+            [ Html.h3 [] [ text "スポンサー募集中！" ]
             , p []
                 [ text "関数型まつりの開催には、みなさまのサポートが必要です！現在、イベントを支援していただけるスポンサー企業を募集しています。関数型プログラミングのコミュニティを一緒に盛り上げていきたいという企業のみなさま、ぜひご検討ください。"
                 ]
@@ -648,66 +625,57 @@ shuffleList seed list =
 
 
 sponsorLogos : Int -> Html msg
-sponsorLogos seed =
-    let
-        -- スポンサープランによらない、レイアウト構成を決めるようなスタイルを定義
-        logoGridStyle =
-            batch
+sponsorLogos randomSeed =
+    div
+        [ css
+            [ width (pct 100)
+            , maxWidth (em 43)
+            , display grid
+            , rowGap (px 40)
+            ]
+        ]
+        [ sponsorPlan "プラチナスポンサー"
+            { mobileColumnsCount = 1, desktopColumnWidth = "326px" }
+            (platinumSponsorsShuffled randomSeed)
+        , sponsorPlan "ゴールドスポンサー"
+            { mobileColumnsCount = 2, desktopColumnWidth = "257px" }
+            (goldSponsorsShuffled randomSeed)
+        , sponsorPlan "シルバースポンサー"
+            { mobileColumnsCount = 3, desktopColumnWidth = "163px" }
+            (silverSponsorsShuffled randomSeed)
+        , sponsorPlan "ロゴスポンサー"
+            { mobileColumnsCount = 4, desktopColumnWidth = "116px" }
+            (logoSponsorsShuffled randomSeed)
+        ]
+
+
+sponsorPlan :
+    String
+    -> { mobileColumnsCount : Int, desktopColumnWidth : String }
+    -> List Sponsor
+    -> Html msg
+sponsorPlan title { mobileColumnsCount, desktopColumnWidth } sponsors =
+    div
+        [ css
+            [ display grid
+            , rowGap (px 20)
+            , withMedia [ only screen [ Media.minWidth (px 640) ] ]
+                [ rowGap (px 30) ]
+            ]
+        ]
+        [ h3 [ css [ color (rgb 0x66 0x66 0x66) ] ] [ text title ]
+        , div
+            [ css
                 [ display grid
                 , rowGap (px 10)
                 , columnGap (px 10)
-                , paddingTop (px 20)
                 , justifyContent center
+                , gridTemplateColumns (List.repeat mobileColumnsCount (fr 1))
                 , withMedia [ only screen [ Media.minWidth (px 640) ] ]
-                    [ paddingTop (px 30)
-                    ]
-                ]
-    in
-    div [ css [ width (pct 100), maxWidth (em 43) ] ]
-        [ sponsorPlanHeader "プラチナスポンサー"
-        , div
-            [ css
-                [ logoGridStyle
-                , paddingBottom (px 40)
-                , gridTemplateColumns [ fr 1 ]
-                , withMedia [ only screen [ Media.minWidth (px 640) ] ]
-                    [ gridTemplateColumns [ px 326 ] ]
+                    [ property "grid-template-columns" ("repeat(auto-fit, " ++ desktopColumnWidth ++ ")") ]
                 ]
             ]
-            (List.map sponsorLogo (platinumSponsorsShuffled seed))
-        , sponsorPlanHeader "ゴールドスポンサー"
-        , div
-            [ css
-                [ logoGridStyle
-                , paddingBottom (px 40)
-                , gridTemplateColumns [ fr 1, fr 1 ]
-                , withMedia [ only screen [ Media.minWidth (px 640) ] ]
-                    [ gridTemplateColumns [ px 257 ] ]
-                ]
-            ]
-            (List.map sponsorLogo (goldSponsorsShuffled seed))
-        , sponsorPlanHeader "シルバースポンサー"
-        , div
-            [ css
-                [ logoGridStyle
-                , paddingBottom (px 40)
-                , gridTemplateColumns [ fr 1, fr 1, fr 1 ]
-                , withMedia [ only screen [ Media.minWidth (px 640) ] ]
-                    [ property "grid-template-columns" "repeat(auto-fit, 163px)" ]
-                ]
-            ]
-            (List.map sponsorLogo (silverSponsorsShuffled seed))
-        , sponsorPlanHeader "ロゴスポンサー"
-        , div
-            [ css
-                [ logoGridStyle
-                , paddingBottom (px 40)
-                , gridTemplateColumns [ fr 1, fr 1, fr 1, fr 1 ]
-                , withMedia [ only screen [ Media.minWidth (px 640) ] ]
-                    [ property "grid-template-columns" "repeat(auto-fit, 116px)" ]
-                ]
-            ]
-            (List.map sponsorLogo (logoSponsorsShuffled seed))
+            (List.map sponsorLogo sponsors)
         ]
 
 
@@ -728,30 +696,6 @@ sponsorLogo s =
             , alt s.name
             ]
             []
-        ]
-
-
-sponsorPlanHeader : String -> Html msg
-sponsorPlanHeader name =
-    div
-        [ css
-            [ display grid
-            , property "grid-template-columns " "1fr max-content 1fr"
-            , alignItems center
-            , columnGap (em 0.5)
-            ]
-        ]
-        [ div [ css [ backgroundColor (rgba 30 44 88 0.1), height (px 1) ] ] []
-        , div
-            [ css
-                [ color (rgb 0x66 0x66 0x66)
-                , whiteSpace noWrap
-                , withMedia [ only screen [ Media.minWidth (px 640) ] ]
-                    [ fontSize (px 16) ]
-                ]
-            ]
-            [ text name ]
-        , div [ css [ backgroundColor (rgba 30 44 88 0.1), height (px 1) ] ] []
         ]
 
 
@@ -837,3 +781,29 @@ section title children =
                 h2 [] [ text title ]
     in
     Html.section [] (heading :: children)
+
+
+h3 : List (Attribute msg) -> List (Html msg) -> Html msg
+h3 attributes children =
+    let
+        pseudoDividerStyles =
+            [ property "content" (qt "")
+            , display block
+            , height (px 1)
+            , backgroundColor (rgba 30 44 88 0.1)
+            ]
+    in
+    Html.styled Html.h3
+        [ margin zero
+        , display grid
+        , property "grid-template-columns " "1fr max-content 1fr"
+        , alignItems center
+        , columnGap (em 0.5)
+        , whiteSpace noWrap
+        , fontSize (px 16)
+        , fontWeight normal
+        , before pseudoDividerStyles
+        , after pseudoDividerStyles
+        ]
+        attributes
+        children
