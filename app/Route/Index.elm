@@ -715,7 +715,15 @@ teamSection =
                 ]
     in
     section "Team"
-        [ div [ class "people leaders" ]
+        [ div [ class "markdown people" ]
+            [ h3 [] [ text "当日スタッフ募集中" ]
+            , p []
+                [ text "関数型まつりでは当日スタッフを募集しています。"
+                , a [ href "/extra-staff" ] [ text "当日スタッフ募集のお知らせ" ]
+                , text "をご覧ください"
+                ]
+            ]
+        , div [ class "people leaders" ]
             [ h3 [] [ text "座長" ]
             , ul [] (List.map listItem staff.leader)
             ]
