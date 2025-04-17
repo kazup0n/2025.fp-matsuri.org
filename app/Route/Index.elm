@@ -273,7 +273,7 @@ newsSection =
         [ news
             [ { date = "2025-04-18"
               , label = "当日スタッフの募集を開始しました"
-              , url = "/extra-staff/"
+              , url = "/extra-staff"
               }
             , { date = "2025-04-06"
               , label = "🎉 注目のプログラムがついに公開！そしてチケット販売開始しました！！"
