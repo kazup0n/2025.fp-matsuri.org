@@ -3,14 +3,15 @@ module Route.Sponsors exposing (ActionData, Data, Model, Msg, data, route)
 import BackendTask exposing (BackendTask)
 import BackendTask.Glob as Glob
 import Css exposing (..)
-import Css.Extra exposing (marginBlock)
+import Css.Extra exposing (columnGap, grid, paddingBlock)
+import Css.Media as Media exposing (only, screen, withMedia)
 import FatalError exposing (FatalError)
 import Head
 import Head.Seo
 import Html as PlainHtml
 import Html.Attributes as PlainAttributes
-import Html.Styled as Html exposing (Html, div, text)
-import Html.Styled.Attributes exposing (class, css)
+import Html.Styled as Html exposing (Html, a, div, iframe, img, text)
+import Html.Styled.Attributes as Attributes exposing (alt, attribute, class, css, href, src)
 import Json.Decode as Decode exposing (Decoder)
 import Markdown.Block exposing (Block)
 import Markdown.Html
@@ -20,6 +21,7 @@ import Plugin.MarkdownCodec
 import RouteBuilder exposing (App, StatelessRoute)
 import Shared
 import Site
+import Svg.Styled.Attributes exposing (style)
 import View exposing (View)
 
 
@@ -98,19 +100,37 @@ planDecoder =
             )
 
 
+type IframeData
+    = SpeakerDeck String
+
+
+iframeDecoder : Decoder IframeData
+iframeDecoder =
+    Decode.oneOf
+        [ Decode.field "speakerDeck" Decode.string
+            |> Decode.andThen (\value -> Decode.succeed (SpeakerDeck value))
+        ]
+
+
 type alias SponsorMetadata =
-    { name : String
+    { id : String
+    , name : String
+    , href : String
     , plan : Plan
     , postedAt : String
+    , iframe : Maybe (List IframeData)
     }
 
 
 metadataDecoder : Decoder SponsorMetadata
 metadataDecoder =
-    Decode.map3 SponsorMetadata
+    Decode.map6 SponsorMetadata
+        (Decode.field "id" Decode.string)
         (Decode.field "name" Decode.string)
+        (Decode.field "href" Decode.string)
         (Decode.field "plan" planDecoder)
         (Decode.field "postedAt" Decode.string)
+        (Decode.maybe (Decode.field "iframe" (Decode.list iframeDecoder)))
 
 
 {-| content/sponsors 直下にあるMarkdownファイルを取得するためのBackendTask
@@ -150,23 +170,32 @@ view :
     -> View (PagesMsg Msg)
 view d _ =
     { title = ""
-    , body = [ sponsorsSection d.data ]
+    , body = [ Html.section [] [ sponsorsSection d.data ] ]
     }
 
 
 sponsorsSection : Data -> Html msg
 sponsorsSection pageData =
-    Html.section []
-        [ div [ css [ maxWidth (em 32.5) ] ]
-            (List.map
-                (\f ->
-                    div
-                        [ css
-                            [ marginBlock (px 40)
-                            , borderTop3 (px 5) solid (rgb 246 246 246)
-                            , firstChild [ borderTopStyle none ]
+    div
+        []
+        (List.map
+            (\f ->
+                div
+                    [ css
+                        [ paddingBlock (px 40)
+                        , borderTop3 (px 5) solid (rgb 246 246 246)
+                        , firstChild [ borderTopStyle none ]
+                        , withMedia [ only screen [ Media.minWidth (px 640) ] ]
+                            [ display grid
+                            , property "grid-template-columns" "210px 1fr"
+                            , columnGap (px 40)
                             ]
                         ]
+                    ]
+                    [ div [ css [ marginBottom (px 30) ] ]
+                        [ sponsorLogo f.metadata.id f.metadata.name f.metadata.href ]
+                    , div
+                        [ css [ maxWidth (em 32.5) ] ]
                         [ div
                             [ css
                                 [ marginTop (px 15)
@@ -176,18 +205,44 @@ sponsorsSection pageData =
                             [ text f.metadata.name ]
                         , div
                             [ css [ marginTop (px 20) ], class "markdown-html-workaround" ]
-                            (sponsorBody f.body)
+                            (sponsorBody customizedHtmlRenderer f.body)
+                        , div
+                            [ css [ marginTop (px 40) ] ]
+                            (f.metadata.iframe
+                                |> Maybe.map (List.map sponsorIframe)
+                                |> Maybe.withDefault []
+                            )
                         ]
-                )
-                pageData
+                    ]
             )
+            pageData
+        )
+
+
+sponsorLogo : String -> String -> String -> Html msg
+sponsorLogo image name site =
+    a
+        [ href site
+        , Attributes.rel "noopener noreferrer"
+        , Attributes.target "_blank"
+        ]
+        [ img
+            [ src ("images/sponsors/" ++ image ++ ".png")
+            , css
+                [ backgroundColor (rgb 255 255 255)
+                , borderRadius (px 10)
+                , width (pct 100)
+                ]
+            , alt name
+            ]
+            []
         ]
 
 
-sponsorBody : List Block -> List (Html msg)
-sponsorBody body =
+sponsorBody : Markdown.Renderer.Renderer (PlainHtml.Html msg) -> List Block -> List (Html msg)
+sponsorBody renderer body =
     body
-        |> Markdown.Renderer.render customizedHtmlRenderer
+        |> Markdown.Renderer.render renderer
         |> Result.map (List.map (\x -> Html.fromUnstyled x))
         |> (\r ->
                 case r of
@@ -198,6 +253,20 @@ sponsorBody body =
                         Ok m
            )
         |> Result.withDefault []
+
+
+sponsorIframe : IframeData -> Html msg
+sponsorIframe iframeData =
+    case iframeData of
+        SpeakerDeck value ->
+            iframe
+                [ class "speakerdeck-iframe"
+                , attribute "frameborder" "0"
+                , src ("https://speakerdeck.com/player/" ++ value)
+                , style "border: 0px; background: padding-box padding-box rgba(0, 0, 0, 0.1); margin: 0px; padding: 0px; border-radius: 6px; width: 100%; height: auto; aspect-ratio: 560 / 315;"
+                , attribute "data-ratio" "1.7777777777777777"
+                ]
+                []
 
 
 {-| スポンサー記事のmarkdownからHTMLに変換するためのRendererです。
