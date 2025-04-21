@@ -1,5 +1,7 @@
 ---
+id: zauel
 name: 合同会社ザウエル
+href: "https://zauel.co.jp"
 plan: シルバー
 postedAt: 2025-03-27 20:29
 ---

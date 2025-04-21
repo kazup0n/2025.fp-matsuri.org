@@ -1,5 +1,7 @@
 ---
+id: hatena
 name: 株式会社はてな
+href: "https://hatena.co.jp"
 plan: シルバー
 postedAt: 2025-04-15 14:55
 iframe:

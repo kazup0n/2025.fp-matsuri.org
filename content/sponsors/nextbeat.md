@@ -1,5 +1,7 @@
 ---
+id: nextbeat
 name: 株式会社ネクストビート
+href: "https://www.nextbeat.co.jp/"
 plan: シルバー
 postedAt: 2025-04-08 09:39
 iframe:
