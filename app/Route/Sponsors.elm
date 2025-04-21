@@ -149,6 +149,9 @@ sponsorFiles =
         |> Glob.toBackendTask
 
 
+{-| スポンサーデータを取得します。
+スポンサーデータはmd+frontmatterで管理されており、それらのファイルのバリデーションを行い、データを格納します。
+-}
 sponsorsData : BackendTask FatalError Data
 sponsorsData =
     sponsorFiles
@@ -220,7 +223,30 @@ sponsorsSection pageData =
                         ]
                     ]
             )
-            pageData
+            (sortSponsors pageData)
+        )
+
+
+sortSponsors : List SponsorArticle -> List SponsorArticle
+sortSponsors =
+    List.sortBy
+        (\s ->
+            let
+                priority =
+                    case s.metadata.plan of
+                        Platinum ->
+                            3
+
+                        Gold ->
+                            2
+
+                        Silver ->
+                            1
+
+                        _ ->
+                            0
+            in
+            ( -priority, s.metadata.postedAt )
         )
 
 
