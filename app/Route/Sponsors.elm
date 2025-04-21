@@ -75,7 +75,8 @@ type alias SponsorArticle =
 
 
 type Plan
-    = Gold
+    = Platinum
+    | Gold
     | Silver
     | Logo
 
@@ -86,6 +87,9 @@ planDecoder =
         |> Decode.andThen
             (\value ->
                 case value of
+                    "プラチナ" ->
+                        Decode.succeed Platinum
+
                     "ゴールド" ->
                         Decode.succeed Gold
 
@@ -196,7 +200,8 @@ sponsorsSection pageData =
                         [ sponsorLogo f.metadata.id f.metadata.name f.metadata.href ]
                     , div
                         [ css [ maxWidth (em 32.5) ] ]
-                        [ div
+                        [ div [] (sponsorPlanBadge f.metadata.plan)
+                        , div
                             [ css
                                 [ marginTop (px 15)
                                 , fontSize (px 28)
@@ -217,6 +222,24 @@ sponsorsSection pageData =
             )
             pageData
         )
+
+
+sponsorPlanBadge : Plan -> List (Html msg)
+sponsorPlanBadge plan =
+    (case plan of
+        Platinum ->
+            [ "images/sponsor-labels/platinum.svg" ]
+
+        Gold ->
+            [ "images/sponsor-labels/gold.svg" ]
+
+        Silver ->
+            [ "images/sponsor-labels/silver.svg" ]
+
+        _ ->
+            []
+    )
+        |> List.map (\src_ -> img [ src src_, css [ display block, width (px 80) ] ] [])
 
 
 sponsorLogo : String -> String -> String -> Html msg
