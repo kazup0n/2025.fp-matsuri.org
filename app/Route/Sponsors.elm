@@ -60,7 +60,7 @@ head :
     App Data ActionData RouteParams
     -> List Head.Tag
 head _ =
-    Site.summaryLarge { pageTitle = "" }
+    Site.summaryLarge { pageTitle = "スポンサー" }
         |> Head.Seo.website
 
 
@@ -176,7 +176,7 @@ view :
     -> Shared.Model
     -> View (PagesMsg Msg)
 view d _ =
-    { title = ""
+    { title = "スポンサー"
     , body = [ Html.section [] [ sponsorsSection d.data ] ]
     }
 
