@@ -203,7 +203,7 @@ sponsorsSection pageData =
                         [ sponsorLogo f.metadata.id f.metadata.name f.metadata.href ]
                     , div
                         [ css [ maxWidth (em 32.5) ] ]
-                        [ div [] (sponsorPlanBadge f.metadata.plan)
+                        [ div [] [ planToBadge f.metadata.plan ]
                         , div
                             [ css
                                 [ marginTop (px 15)
