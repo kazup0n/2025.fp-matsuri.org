@@ -391,7 +391,7 @@ customizedHtmlRenderer =
                 , Markdown.Html.tag "b" (\children -> PlainHtml.b [] children)
                 , Markdown.Html.tag "li" (\children -> PlainHtml.li [] children)
                 , Markdown.Html.tag "ul" (\children -> PlainHtml.ul [] children)
-                , Markdown.Html.tag "br" (\children -> PlainHtml.ul [] children)
+                , Markdown.Html.tag "br" (\children -> PlainHtml.br [] children)
                 , Markdown.Html.tag "a"
                     (\href_ children ->
                         PlainHtml.a
