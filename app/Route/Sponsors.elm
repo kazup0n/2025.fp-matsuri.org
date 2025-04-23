@@ -314,6 +314,7 @@ sponsorIframe iframeData =
                 , src ("https://speakerdeck.com/player/" ++ value)
                 , style "border: 0px; background: padding-box padding-box rgba(0, 0, 0, 0.1); margin: 0px; padding: 0px; border-radius: 6px; width: 100%; height: auto; aspect-ratio: 560 / 315;"
                 , attribute "data-ratio" "1.7777777777777777"
+                , attribute "allowfullscreen" "true"
                 ]
                 []
 
