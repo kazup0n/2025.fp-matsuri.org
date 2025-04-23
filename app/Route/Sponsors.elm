@@ -250,22 +250,23 @@ sortSponsors =
         )
 
 
-sponsorPlanBadge : Plan -> List (Html msg)
-sponsorPlanBadge plan =
+planToBadge : Plan -> Html msg
+planToBadge plan =
     (case plan of
         Platinum ->
-            [ "images/sponsor-labels/platinum.svg" ]
+            Just "platinum.svg"
 
         Gold ->
-            [ "images/sponsor-labels/gold.svg" ]
+            Just "gold.svg"
 
         Silver ->
-            [ "images/sponsor-labels/silver.svg" ]
+            Just "silver.svg"
 
         _ ->
-            []
+            Nothing
     )
-        |> List.map (\src_ -> img [ src src_, css [ display block, width (px 80) ] ] [])
+        |> Maybe.map (\badgeImage -> img [ src ("images/sponsor-labels/" ++ badgeImage), css [ display block, width (px 80) ] ] [])
+        |> Maybe.withDefault (text "")
 
 
 sponsorLogo : String -> String -> String -> Html msg
@@ -295,13 +296,12 @@ sponsorBody renderer body =
         |> Result.map (List.map (\x -> Html.fromUnstyled x))
         |> (\r ->
                 case r of
-                    Err m ->
-                        Ok [ text m ]
+                    Err e ->
+                        [ text e ]
 
                     Ok m ->
-                        Ok m
+                        m
            )
-        |> Result.withDefault []
 
 
 sponsorIframe : IframeData -> Html msg
