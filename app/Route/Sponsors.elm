@@ -5,6 +5,7 @@ import BackendTask.Glob as Glob
 import Css exposing (..)
 import Css.Extra exposing (columnGap, grid, paddingBlock)
 import Css.Media as Media exposing (only, screen, withMedia)
+import Data.Sponsor exposing (IframeData(..), Plan(..), SponsorArticle, metadataDecoder, planToBadge)
 import FatalError exposing (FatalError)
 import Head
 import Head.Seo
@@ -12,7 +13,6 @@ import Html as PlainHtml
 import Html.Attributes as PlainAttributes
 import Html.Styled as Html exposing (Html, a, div, iframe, img, text)
 import Html.Styled.Attributes as Attributes exposing (alt, attribute, class, css, href, src)
-import Json.Decode as Decode exposing (Decoder)
 import Markdown.Block exposing (Block)
 import Markdown.Html
 import Markdown.Renderer exposing (Renderer)
@@ -38,7 +38,11 @@ type alias RouteParams =
 
 
 type alias Data =
-    List SponsorArticle
+    { platinumSponsors : List SponsorArticle
+    , goldSponsors : List SponsorArticle
+    , silverSponsors : List SponsorArticle
+    , logoSponsors : List SponsorArticle
+    }
 
 
 type alias ActionData =
@@ -68,103 +72,48 @@ head _ =
 -- DATA
 
 
-type alias SponsorArticle =
-    { metadata : SponsorMetadata
-    , body : List Block
-    }
-
-
-type Plan
-    = Platinum
-    | Gold
-    | Silver
-    | Logo
-
-
-planDecoder : Decoder Plan
-planDecoder =
-    Decode.string
-        |> Decode.andThen
-            (\value ->
-                case value of
-                    "プラチナ" ->
-                        Decode.succeed Platinum
-
-                    "ゴールド" ->
-                        Decode.succeed Gold
-
-                    "シルバー" ->
-                        Decode.succeed Silver
-
-                    "ロゴ" ->
-                        Decode.succeed Logo
-
-                    _ ->
-                        Decode.fail ("無効なプランです: " ++ value)
-            )
-
-
-type IframeData
-    = SpeakerDeck String
-
-
-iframeDecoder : Decoder IframeData
-iframeDecoder =
-    Decode.oneOf
-        [ Decode.field "speakerDeck" Decode.string
-            |> Decode.andThen (\value -> Decode.succeed (SpeakerDeck value))
-        ]
-
-
-type alias SponsorMetadata =
-    { id : String
-    , name : String
-    , href : String
-    , plan : Plan
-    , postedAt : String
-    , iframe : Maybe (List IframeData)
-    }
-
-
-metadataDecoder : Decoder SponsorMetadata
-metadataDecoder =
-    Decode.map6 SponsorMetadata
-        (Decode.field "id" Decode.string)
-        (Decode.field "name" Decode.string)
-        (Decode.field "href" Decode.string)
-        (Decode.field "plan" planDecoder)
-        (Decode.field "postedAt" Decode.string)
-        (Decode.maybe (Decode.field "iframe" (Decode.list iframeDecoder)))
-
-
-{-| content/sponsors 直下にあるMarkdownファイルを取得するためのBackendTask
--}
-sponsorFiles : BackendTask FatalError (List { filePath : String, slug : String })
-sponsorFiles =
-    Glob.succeed (\f s -> { filePath = f, slug = s })
-        |> Glob.captureFilePath
-        |> Glob.match (Glob.literal "content/sponsors/")
-        |> Glob.capture Glob.wildcard
-        |> Glob.match (Glob.literal ".md")
-        |> Glob.toBackendTask
-
-
 {-| スポンサーデータを取得します。
-スポンサーデータはmd+frontmatterで管理されており、それらのファイルのバリデーションを行い、データを格納します。
+各プランごとに別々にディレクトリからデータを取得し、それぞれ格納します。
 -}
 sponsorsData : BackendTask FatalError Data
 sponsorsData =
-    sponsorFiles
-        |> BackendTask.map
-            (List.map
-                (\d ->
-                    Plugin.MarkdownCodec.withFrontmatter SponsorArticle
-                        metadataDecoder
-                        customizedHtmlRenderer
-                        d.filePath
-                )
+    BackendTask.map4 Data
+        (getSponsorsByPlan "platinum")
+        (getSponsorsByPlan "gold")
+        (getSponsorsByPlan "silver")
+        (getSponsorsByPlan "logo")
+
+
+{-| プラン名からスポンサー記事リストを取得して処理する
+-}
+getSponsorsByPlan : String -> BackendTask FatalError (List SponsorArticle)
+getSponsorsByPlan planName =
+    sponsorFilesByPlan planName
+        |> BackendTask.andThen
+            (\files ->
+                files
+                    |> List.map
+                        (\d ->
+                            Plugin.MarkdownCodec.withFrontmatter SponsorArticle
+                                metadataDecoder
+                                customizedHtmlRenderer
+                                d.filePath
+                        )
+                    |> BackendTask.combine
             )
-        |> BackendTask.andThen BackendTask.combine
+        |> BackendTask.map (List.sortBy (.metadata >> .postedAt))
+
+
+{-| 指定されたプランのスポンサーMarkdownファイルを取得するためのBackendTask
+-}
+sponsorFilesByPlan : String -> BackendTask FatalError (List { filePath : String, slug : String })
+sponsorFilesByPlan planName =
+    Glob.succeed (\f s -> { filePath = f, slug = s })
+        |> Glob.captureFilePath
+        |> Glob.match (Glob.literal ("content/sponsors/" ++ planName ++ "/"))
+        |> Glob.capture Glob.wildcard
+        |> Glob.match (Glob.literal ".md")
+        |> Glob.toBackendTask
 
 
 
@@ -223,7 +172,10 @@ sponsorsSection pageData =
                         ]
                     ]
             )
-            (sortSponsors pageData)
+            ((pageData.platinumSponsors ++ pageData.goldSponsors ++ pageData.silverSponsors)
+                |> List.filter (\s -> s.body /= [])
+                |> sortSponsors
+            )
         )
 
 
@@ -248,25 +200,6 @@ sortSponsors =
             in
             ( -priority, s.metadata.postedAt )
         )
-
-
-planToBadge : Plan -> Html msg
-planToBadge plan =
-    (case plan of
-        Platinum ->
-            Just "platinum.svg"
-
-        Gold ->
-            Just "gold.svg"
-
-        Silver ->
-            Just "silver.svg"
-
-        _ ->
-            Nothing
-    )
-        |> Maybe.map (\badgeImage -> img [ src ("/images/sponsor-labels/" ++ badgeImage), css [ display block, width (px 80) ] ] [])
-        |> Maybe.withDefault (text "")
 
 
 sponsorLogo : String -> String -> String -> Html msg
