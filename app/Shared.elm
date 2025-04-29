@@ -8,8 +8,8 @@ import Css exposing (..)
 import Effect exposing (Effect)
 import FatalError exposing (FatalError)
 import Html exposing (Html)
-import Html.Styled exposing (a, footer, header, img, main_, nav, text)
-import Html.Styled.Attributes exposing (alt, class, css, href, src)
+import Html.Styled exposing (a, br, div, footer, h4, header, img, main_, nav, text)
+import Html.Styled.Attributes as Attr exposing (alt, class, css, href, rel, src)
 import Pages.Flags
 import Pages.PageUrl exposing (PageUrl)
 import Route exposing (Route)
@@ -117,7 +117,23 @@ view _ { route } _ _ pageView =
                     ]
                 ]
                 pageView.body
-            , footer [ class "site-footer" ] [ text "© 2025 関数型まつり準備委員会" ]
+            , footer [ class "site-footer" ]
+                [ nav []
+                    [ h4 [] [ text "サイトマップ" ]
+                    , div [] [ a [ href "/" ] [ text "トップページ" ] ]
+                    , div [] [ a [ href "/schedule" ] [ text "スケジュール" ] ]
+                    , div [] [ a [ href "/sponsors" ] [ text "スポンサー" ] ]
+                    , div [] [ a [ href "/code-of-conduct/" ] [ text "行動規範" ] ]
+                    , br [] []
+                    , h4 [] [ text "公式アカウント" ]
+                    , div [] [ a [ href "https://x.com/fp_matsuri", rel "noopener noreferrer", Attr.target "_blank" ] [ text "X" ] ]
+                    , div [] [ a [ href "https://bsky.app/profile/fp-matsuri.bsky.social", rel "noopener noreferrer", Attr.target "_blank" ] [ text "Bluesky" ] ]
+                    , div [] [ a [ href "https://blog.fp-matsuri.org/", rel "noopener noreferrer", Attr.target "_blank" ] [ text "ブログ" ] ]
+                    , div [] [ a [ href "https://fortee.jp/2025fp-matsuri", rel "noopener noreferrer", Attr.target "_blank" ] [ text "fortee" ] ]
+                    , br [] []
+                    ]
+                , text "© 2025 関数型まつり準備委員会"
+                ]
             ]
     , title =
         if pageView.title /= "" then
