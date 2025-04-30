@@ -1,23 +1,28 @@
 module Route.Index exposing (ActionData, Data, Model, Msg, route)
 
 import BackendTask exposing (BackendTask)
+import Browser.Events
 import Css exposing (..)
-import Css.Extra exposing (columnGap, fr, grid, gridColumn, gridTemplateColumns, rowGap)
-import Css.Global exposing (descendants, withClass)
+import Css.Extra exposing (columnGap, fr, grid, gridColumn, gridRow, gridTemplateColumns, gridTemplateRows, rowGap)
+import Css.Global exposing (children, descendants, withClass)
 import Css.Media as Media exposing (only, screen, withMedia)
 import Data.Sponsor exposing (Plan(..))
 import Effect exposing (Effect)
 import FatalError exposing (FatalError)
+import FpMatsuri.BackgroundTexture as BackgroundTexture
+import FpMatsuri.Logo
 import Head
 import Head.Seo
 import Html.Styled as Html exposing (Attribute, Html, a, div, h1, h2, h3, iframe, img, li, p, section, span, tbody, td, text, th, thead, tr, ul)
-import Html.Styled.Attributes as Attributes exposing (alt, attribute, class, css, href, id, rel, src)
+import Html.Styled.Attributes as Attributes exposing (alt, attribute, class, css, href, rel, src)
 import PagesMsg exposing (PagesMsg)
 import Random
 import Route.Sponsors as Sponsors
 import RouteBuilder exposing (App, StatefulRoute)
 import Shared
 import Site
+import Time exposing (Posix)
+import UrlPath
 import View exposing (View)
 
 
@@ -32,7 +37,7 @@ route =
             { init = init
             , update = update
             , view = view
-            , subscriptions = \_ _ _ _ -> Sub.none
+            , subscriptions = subscriptions
             }
 
 
@@ -42,12 +47,13 @@ route =
 
 type alias Model =
     { seed : Int
+    , time : Float
     }
 
 
 init : App Data ActionData RouteParams -> Shared.Model -> ( Model, Effect Msg )
 init _ _ =
-    ( { seed = 0 }
+    ( { seed = 0, time = 0 }
     , Effect.fromCmd (Random.generate GotRandomSeed (Random.int 0 100))
     )
 
@@ -58,6 +64,7 @@ init _ _ =
 
 type Msg
     = GotRandomSeed Int
+    | Tick Posix
 
 
 update : App Data ActionData RouteParams -> Shared.Model -> Msg -> Model -> ( Model, Effect Msg )
@@ -65,6 +72,9 @@ update _ _ msg model =
     case msg of
         GotRandomSeed newSeed ->
             ( { model | seed = newSeed }, Effect.none )
+
+        Tick newTime ->
+            ( { model | time = Time.posixToMillis newTime |> toFloat }, Effect.none )
 
 
 
@@ -104,7 +114,7 @@ view :
 view app _ model =
     { title = ""
     , body =
-        [ hero model.seed app.data.sponsors
+        [ hero model.seed model.time app.data.sponsors
         , newsSection
         , aboutSection
         , overviewSection
@@ -114,9 +124,15 @@ view app _ model =
     }
 
 
-hero : Int -> Sponsors.Data -> Html msg
-hero seed sponsorsData =
+hero : Int -> Float -> Sponsors.Data -> Html msg
+hero seed time sponsorsData =
     let
+        cellSize =
+            25
+
+        { gridRows, gridColumns } =
+            { gridRows = 22, gridColumns = 81 }
+
         -- Get platinum sponsors for hero section
         platinumSponsors =
             sponsorsData.platinumSponsors
@@ -129,21 +145,88 @@ hero seed sponsorsData =
                     )
                 |> shuffleList seed
     in
-    div [ css [ padding3 zero (px 10) (px 10) ] ]
+    div
+        [ css
+            [ padding3 zero (px 10) (px 10)
+            , display grid
+            , gridTemplateColumns [ fr 1 ]
+            , gridTemplateRows [ fr 1 ]
+            ]
+        ]
         [ div
             [ css
-                [ padding3 (px 80) (px 20) (px 20)
-                , display grid
-                , property "justify-items" "center"
-                , rowGap (rem 2.5)
+                [ gridColumn "1/-1"
+                , gridRow "1/-1"
+                , overflow hidden
+                , height (px (cellSize * 20))
                 , borderRadius (px 10)
-                , property "background-color" "var(--color-grey095)"
-                , property "color" "var(--color-primary)"
+                , withMedia [ only screen [ Media.minWidth (px 640) ] ]
+                    [ height (px (cellSize * 22)) ]
                 ]
             ]
-            [ logoAndDate
-            , heroSponsorsBlock platinumSponsors
-            , socialLinkList
+            [ div
+                [ css
+                    [ display grid
+                    , gridTemplateColumns (List.repeat gridColumns (px cellSize))
+                    , gridTemplateRows (List.repeat gridRows (px cellSize))
+                    , justifyContent center
+                    ]
+                ]
+                [ div [ css [ property "display" "contents" ] ] <|
+                    div [ css [ gridColumn "1 / -1", gridRow "1 / -1", backgroundColor (hsl 226 0.05 0.9) ] ] []
+                        :: BackgroundTexture.textureGrid seed time { rows = gridRows, columns = gridColumns }
+                , div
+                    [ css
+                        [ gridColumn "38/-38"
+                        , gridRow "3/8"
+                        , backgroundColor (hsl 226 0.05 0.9)
+                        , padding (px cellSize)
+                        , zIndex (int 1)
+                        , children [ Css.Global.svg [ width (px (cellSize * 5)), height (px (cellSize * 4)) ] ]
+                        , withMedia [ only screen [ Media.minWidth (px 640) ] ]
+                            [ gridRow "5/10" ]
+                        ]
+                    ]
+                    [ Html.fromUnstyled <| FpMatsuri.Logo.logoMark ]
+                , div
+                    [ css
+                        [ gridColumn "35/-35"
+                        , gridRow "8/13"
+                        , backgroundColor (hsl 226 0.05 0.9)
+                        , zIndex (int 1)
+                        , displayFlex
+                        , property "place-items" "center"
+                        , withMedia [ only screen [ Media.minWidth (px 640) ] ]
+                            [ gridRow "10/15" ]
+                        ]
+                    ]
+                    [ logoAndDate ]
+                , div
+                    [ css
+                        [ gridColumn "37/-37"
+                        , gridRow "14/17"
+                        , zIndex (int 1)
+                        , displayFlex
+                        , property "place-items" "center"
+                        , backgroundColor (hsl 226 0.05 0.9)
+                        , withMedia [ only screen [ Media.minWidth (px 640) ] ]
+                            [ gridRow "16/18" ]
+                        ]
+                    ]
+                    [ heroSponsorsBlock platinumSponsors ]
+                ]
+            ]
+        , div
+            [ css
+                [ gridColumn "1/-1"
+                , gridRow "1/-1"
+                , padding (px 20)
+                , display grid
+                , property "align-items" "end"
+                , zIndex (int 1)
+                ]
+            ]
+            [ socialLinkList
                 [ { id = "x"
                   , icon = "/images/x.svg"
                   , href = "https://x.com/fp_matsuri"
@@ -166,16 +249,13 @@ logoAndDate =
     let
         -- TODO：ロゴイメージとロゴタイプ1枚の画像にする
         logo =
-            [ img [ src "/images/logomark.svg", css [ height (pct 100) ] ] []
-            , h1
+            [ h1
                 [ css
                     [ margin zero
                     , lineHeight (num 1)
                     , property "font-family" "var(--serif-logo)"
                     , fontSize (rem 2.2)
                     , fontWeight inherit
-                    , withMedia [ only screen [ Media.minWidth (px 640) ] ]
-                        [ fontSize (rem 3.25) ]
                     ]
                 ]
                 [ text "関数型まつり" ]
@@ -185,10 +265,8 @@ logoAndDate =
             div
                 [ css
                     [ property "font-family" "var(--montserrat-sans)"
-                    , fontSize (rem 1)
+                    , fontSize (em 1.1)
                     , fontWeight (int 300)
-                    , withMedia [ only screen [ Media.minWidth (px 640) ] ]
-                        [ fontSize (rem 1.5) ]
                     ]
                 ]
                 [ text "2025.6.14"
@@ -201,11 +279,11 @@ logoAndDate =
         [ css
             [ width (pct 100)
             , property "display" "grid"
-            , property "grid-template-rows" "6rem auto auto"
+            , property "grid-template-rows" "auto auto"
             , property "place-items" "center"
-            , rowGap (rem 1.2)
+            , rowGap (em 1)
             , withMedia [ only screen [ Media.minWidth (px 640) ] ]
-                [ property "grid-template-rows" "9rem auto auto" ]
+                [ property "grid-template-rows" "auto auto" ]
             ]
         ]
         (logo ++ [ date ])
@@ -221,15 +299,13 @@ heroSponsorsBlock sponsors =
                 , Attributes.target "_blank"
                 , css
                     [ display block
-                    , width (px 200)
-                    , withMedia [ only screen [ Media.minWidth (px 640) ] ]
-                        [ width (px 250) ]
+                    , width (pct 90)
                     ]
                 ]
                 [ img
                     [ src ("/images/sponsors/" ++ sponsor.image)
                     , css
-                        [ backgroundColor (rgb 255 255 255)
+                        [ display block
                         , borderRadius (px 10)
                         , width (pct 100)
                         ]
@@ -238,7 +314,7 @@ heroSponsorsBlock sponsors =
                     []
                 ]
     in
-    div [] (List.map platinumSponsorLogo sponsors)
+    div [ css [ display grid, property "place-items" "center" ] ] (List.map platinumSponsorLogo sponsors)
 
 
 socialLinkList : List { id : String, icon : String, href : String } -> Html msg
@@ -272,6 +348,7 @@ socialLinkList links_ =
     ul
         [ css
             [ width (pct 100)
+            , height (px 44)
             , margin zero
             , padding zero
             , displayFlex
@@ -819,3 +896,8 @@ h3 attributes children =
         ]
         attributes
         children
+
+
+subscriptions : RouteParams -> UrlPath.UrlPath -> Shared.Model -> Model -> Sub Msg
+subscriptions _ _ _ _ =
+    Browser.Events.onAnimationFrame Tick
