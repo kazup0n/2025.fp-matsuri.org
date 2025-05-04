@@ -10,6 +10,7 @@ import FatalError exposing (FatalError)
 import Html exposing (Html)
 import Html.Styled exposing (a, br, div, footer, h4, header, img, main_, nav, text)
 import Html.Styled.Attributes as Attr exposing (alt, class, css, href, rel, src)
+import Html.Styled.Events as Events
 import Pages.Flags
 import Pages.PageUrl exposing (PageUrl)
 import Route exposing (Route)
@@ -39,10 +40,11 @@ type alias Data =
 
 type SharedMsg
     = NoOp
+    | ToggleMenu
 
 
 type alias Model =
-    {}
+    { isMenuOpen : Bool }
 
 
 init :
@@ -59,14 +61,23 @@ init :
             }
     -> ( Model, Effect Msg )
 init _ _ =
-    ( {}, Effect.none )
+    ( { isMenuOpen = False }
+    , Effect.none
+    )
 
 
 update : Msg -> Model -> ( Model, Effect Msg )
 update msg model =
     case msg of
-        SharedMsg _ ->
-            ( model, Effect.none )
+        SharedMsg sharedMsg ->
+            case sharedMsg of
+                NoOp ->
+                    ( model, Effect.none )
+
+                ToggleMenu ->
+                    ( { model | isMenuOpen = not model.isMenuOpen }
+                    , Effect.none
+                    )
 
 
 subscriptions : UrlPath -> Model -> Sub Msg
@@ -79,6 +90,33 @@ data =
     BackendTask.succeed ()
 
 
+navMenu : (Msg -> msg) -> Bool -> Html.Styled.Html msg
+navMenu toMsg isMenuOpen =
+    let
+        hamburger =
+            Html.Styled.span
+                [ Attr.css [ display block, width (px 20), height (px 2), backgroundColor (rgb 0 0 0), margin (px 4) ]
+                ]
+                []
+                |> List.repeat 3
+    in
+    div [ class "site-menu" ]
+        [ Html.Styled.button [ Events.onClick (toMsg (SharedMsg ToggleMenu)) ] hamburger
+        , nav
+            [ class <|
+                if isMenuOpen then
+                    "menu-open"
+
+                else
+                    "menu-close"
+            ]
+            [ a [ href "/code-of-conduct/" ] [ text "行動規範" ]
+            , a [ href "/schedule" ] [ text "スケジュール" ]
+            , a [ href "/sponsors" ] [ text "スポンサー" ]
+            ]
+        ]
+
+
 view :
     Data
     ->
@@ -89,7 +127,7 @@ view :
     -> (Msg -> msg)
     -> View msg
     -> { body : List (Html msg), title : String }
-view _ { route } _ _ pageView =
+view _ { route } model toMsg pageView =
     { body =
         List.map Html.Styled.toUnstyled
             [ header [ class "site-header" ]
@@ -100,11 +138,7 @@ view _ { route } _ _ pageView =
                         ]
                         []
                     ]
-                , nav []
-                    [ a [ href "/code-of-conduct/" ] [ text "行動規範" ]
-                    , a [ href "/schedule" ] [ text "スケジュール" ]
-                    , a [ href "/sponsors" ] [ text "スポンサー" ]
-                    ]
+                , navMenu toMsg model.isMenuOpen
                 ]
             , main_
                 [ css
