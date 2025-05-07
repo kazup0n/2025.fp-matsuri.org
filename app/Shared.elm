@@ -5,6 +5,7 @@ module Shared exposing (Data, Model, Msg(..), SharedMsg(..), template)
 
 import BackendTask exposing (BackendTask)
 import Css exposing (..)
+import Css.Media as Media
 import Effect exposing (Effect)
 import FatalError exposing (FatalError)
 import Html exposing (Html)
@@ -26,7 +27,7 @@ template =
     , view = view
     , data = data
     , subscriptions = subscriptions
-    , onPageChange = Nothing
+    , onPageChange = Just onPageChange
     }
 
 
@@ -39,12 +40,12 @@ type alias Data =
 
 
 type SharedMsg
-    = NoOp
-    | ToggleMenu
+    = CloseMenu
+    | OpenMenu
 
 
 type alias Model =
-    { isMenuOpen : Bool }
+    { menuOpened : Bool }
 
 
 init :
@@ -61,7 +62,7 @@ init :
             }
     -> ( Model, Effect Msg )
 init _ _ =
-    ( { isMenuOpen = False }
+    ( { menuOpened = False }
     , Effect.none
     )
 
@@ -71,11 +72,13 @@ update msg model =
     case msg of
         SharedMsg sharedMsg ->
             case sharedMsg of
-                NoOp ->
-                    ( model, Effect.none )
+                CloseMenu ->
+                    ( { model | menuOpened = False }
+                    , Effect.none
+                    )
 
-                ToggleMenu ->
-                    ( { model | isMenuOpen = not model.isMenuOpen }
+                OpenMenu ->
+                    ( { model | menuOpened = True }
                     , Effect.none
                     )
 
@@ -85,36 +88,91 @@ subscriptions _ _ =
     Sub.none
 
 
+onPageChange :
+    { path : UrlPath
+    , query : Maybe String
+    , fragment : Maybe String
+    }
+    -> Msg
+onPageChange _ =
+    SharedMsg CloseMenu
+
+
 data : BackendTask FatalError Data
 data =
     BackendTask.succeed ()
 
 
 navMenu : (Msg -> msg) -> Bool -> Html.Styled.Html msg
-navMenu toMsg isMenuOpen =
+navMenu toMsg menuOpened =
     let
+        mediaQueryForMobile =
+            Media.withMedia [ Media.only Media.screen [ Media.maxWidth (px 768) ] ]
+
+        mediaQueryForPC =
+            Media.withMedia [ Media.only Media.screen [ Media.minWidth (px 769) ] ]
+
+        pcMenuContent =
+            nav [ css [ mediaQueryForPC [ Css.displayFlex ], mediaQueryForMobile [ Css.display Css.none ] ] ]
+                [ a [ href "/code-of-conduct/" ] [ text "行動規範" ]
+                , a [ href "/schedule" ] [ text "スケジュール" ]
+                , a [ href "/sponsors" ] [ text "スポンサー" ]
+                ]
+
         hamburger =
             Html.Styled.span
-                [ Attr.css [ display block, width (px 20), height (px 2), backgroundColor (rgb 0 0 0), margin (px 4) ]
+                [ css [ display block, width (px 20), height (px 2), backgroundColor (rgb 0 0 0), margin (px 4) ]
                 ]
                 []
                 |> List.repeat 3
+
+        hamburgerButton =
+            Html.Styled.button
+                [ Events.onClick (toMsg (SharedMsg OpenMenu))
+                , css [ mediaQueryForPC [ Css.display Css.none ], mediaQueryForMobile [ Css.display Css.inlineBlock ] ]
+                ]
+                hamburger
+
+        withClose =
+            Events.onClick (toMsg (SharedMsg CloseMenu))
+
+        sitemap =
+            [ div [ class "hr-with-text" ] [ text "サイトマップ" ]
+            , div [] [ a [ href "/", withClose ] [ text "トップページ" ] ]
+            , div [] [ a [ href "/schedule", withClose ] [ text "スケジュール" ] ]
+            , div [] [ a [ href "/sponsors", withClose ] [ text "スポンサー" ] ]
+            , div [] [ a [ href "/code-of-conduct/", withClose ] [ text "行動規範" ] ]
+            ]
+
+        accounts =
+            [ div [ class "hr-with-text" ] [ text "公式アカウント" ]
+            , div [] [ a [ href "https://x.com/fp_matsuri", rel "noopener noreferrer", Attr.target "_blank" ] [ text "X" ] ]
+            , div [] [ a [ href "https://bsky.app/profile/fp-matsuri.bsky.social", rel "noopener noreferrer", Attr.target "_blank" ] [ text "Bluesky" ] ]
+            , div [] [ a [ href "https://blog.fp-matsuri.org/", rel "noopener noreferrer", Attr.target "_blank" ] [ text "ブログ" ] ]
+            , div [] [ a [ href "https://fortee.jp/2025fp-matsuri", rel "noopener noreferrer", Attr.target "_blank" ] [ text "fortee" ] ]
+            ]
+
+        hamburgerMenuContents =
+            if not menuOpened then
+                []
+
+            else
+                [ div [ class "menu-overlay", withClose ] []
+                , nav
+                    [ class "mobile-menu-content"
+                    , css [ mediaQueryForPC [ Css.display Css.none ], mediaQueryForMobile [ Css.display Css.block ] ]
+                    ]
+                    [ div [ class "menu-header" ]
+                        [ a [ href "/", withClose ] [ img [ src "/images/logotype.svg", alt "関数型まつり" ] [] ]
+                        , div [ class "menu-close-button", withClose ] [ text "✕" ]
+                        ]
+                    , div [] sitemap
+                    , div [] accounts
+                    ]
+                ]
     in
     div [ class "site-menu" ]
-        [ Html.Styled.button [ Events.onClick (toMsg (SharedMsg ToggleMenu)) ] hamburger
-        , nav
-            [ class <|
-                if isMenuOpen then
-                    "menu-open"
-
-                else
-                    "menu-close"
-            ]
-            [ a [ href "/code-of-conduct/" ] [ text "行動規範" ]
-            , a [ href "/schedule" ] [ text "スケジュール" ]
-            , a [ href "/sponsors" ] [ text "スポンサー" ]
-            ]
-        ]
+        (pcMenuContent :: hamburgerButton :: hamburgerMenuContents)
 
 
 view :
@@ -138,7 +196,7 @@ view _ { route } model toMsg pageView =
                         ]
                         []
                     ]
-                , navMenu toMsg model.isMenuOpen
+                , navMenu toMsg model.menuOpened
                 ]
             , main_
                 [ css
